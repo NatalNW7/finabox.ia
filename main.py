@@ -8,7 +8,7 @@ def read_descricao(descricao: str) -> dict:
         'Nome': descricao[1].strip(),
         'Categoria': descricao[0].strip()
     }
- 
+
 def json_dumps(json_dict: dict) -> str:
     return json.dumps(json_dict, indent=4, ensure_ascii=False).encode('utf8').decode()
 
