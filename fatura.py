@@ -76,7 +76,7 @@ if '__main__' == __name__:
     # fatura_inter = read_inter(pdf_inter)
     # print(fatura_inter)
 
-    fatura_pan = read_pan(pdf_meliuz)
+    fatura_pan = read_meliuz(pdf_meliuz)
     # print(fatura_pan)
 
     # TODO fazer leitura de pdf pan
