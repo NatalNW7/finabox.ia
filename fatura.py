@@ -34,6 +34,7 @@ def read_inter(pdf):
     fatura = PyPDF2.PdfReader(pdf)
     text = fatura.pages[1].extract_text()
     dict_fatura = []
+
     with open('output.txt', 'w') as fatura_txt:
         fatura_txt.write(text)
 
@@ -55,16 +56,28 @@ def read_inter(pdf):
 
     return fatura
 
+def read_meliuz(pdf):
+    df = tabula.io.read_pdf(pdf,pages=3)[0]
+    df = df[['Unnamed: 0','Unnamed: 1','Unnamed: 2']]
+    df = df.rename(columns={'Unnamed: 0': 'Data', 'Unnamed: 1': 'Movimentacao', 'Unnamed: 2': 'Valor'})
+    df = df.dropna()
+    
+    return df.reset_index(drop=True)
+
+
 if '__main__' == __name__:
     pdf_nubank = 'Nubank_2023-07-23.pdf'
     pdf_inter = 'inter_2023-07.pdf'
     pdf_meliuz = 'meliuz-2023-07.pdf'
     pdf_pan = 'pan_2023-07.pdf'
 
-    fatura_nubank = read_nubank(pdf_nubank)
-    print(fatura_nubank)
-    fatura_inter = read_inter(pdf_inter)
-    print(fatura_inter)
+    # fatura_nubank = read_nubank(pdf_nubank)
+    # print(fatura_nubank)
+    # fatura_inter = read_inter(pdf_inter)
+    # print(fatura_inter)
+
+    fatura_pan = read_pan(pdf_meliuz)
+    # print(fatura_pan)
 
     # TODO fazer leitura de pdf pan
 
