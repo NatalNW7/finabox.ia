@@ -2,8 +2,9 @@ import tabula
 import PyPDF2
 import pandas as pd
 import re
-import json
+import os
 
+BASE = os.getcwd()
 
 def get_total_pages(pdf: str) -> int:
     total_pages = 0
@@ -14,12 +15,16 @@ def get_total_pages(pdf: str) -> int:
     return total_pages 
 
 def read_pdf(pdf, pages, header=None) -> pd.DataFrame:
-    csv_output = "output.csv"
-    
-    tabula.convert_into(pdf, csv_output, output_format="csv", pages=pages)
-    fatura = pd.read_csv(csv_output, names=header, delimiter=',')
+    dfs = tabula.io.read_pdf(pdf,pages=pages)
 
-    return fatura
+    if len(dfs) > 1:
+        csv_output = os.path.join(BASE, 'temp', "output.csv")
+        tabula.convert_into(pdf, csv_output, output_format="csv", pages=pages)
+        fatura = pd.read_csv(csv_output, names=header, delimiter=',')
+
+        return fatura
+
+    return dfs[0]
 
 def read_nubank(pdf) -> pd.DataFrame:
     header=['Data', 'Unnamed', 'Movimentacao', 'Valor']
@@ -34,11 +39,12 @@ def read_inter(pdf):
     fatura = PyPDF2.PdfReader(pdf)
     text = fatura.pages[1].extract_text()
     dict_fatura = []
+    output = os.path.join(BASE, 'temp', "output.txt")
 
-    with open('output.txt', 'w') as fatura_txt:
+    with open(output, 'w') as fatura_txt:
         fatura_txt.write(text)
 
-    with open('output.txt', 'r') as fatura_txt:
+    with open(output, 'r') as fatura_txt:
         text = fatura_txt.readlines()
 
         for line in text:
@@ -57,7 +63,8 @@ def read_inter(pdf):
     return fatura
 
 def read_meliuz(pdf):
-    df = tabula.io.read_pdf(pdf,pages=3)[0]
+    pages = f'3-{get_total_pages(pdf)}'
+    df = read_pdf(pdf, pages=pages)
     df = df[['Unnamed: 0','Unnamed: 1','Unnamed: 2']]
     df = df.rename(columns={'Unnamed: 0': 'Data', 'Unnamed: 1': 'Movimentacao', 'Unnamed: 2': 'Valor'})
     df = df.dropna()
@@ -71,13 +78,13 @@ if '__main__' == __name__:
     pdf_meliuz = 'meliuz-2023-07.pdf'
     pdf_pan = 'pan_2023-07.pdf'
 
-    # fatura_nubank = read_nubank(pdf_nubank)
-    # print(fatura_nubank)
-    # fatura_inter = read_inter(pdf_inter)
-    # print(fatura_inter)
+    fatura_nubank = read_nubank(pdf_nubank)
+    print(fatura_nubank)
+    fatura_inter = read_inter(pdf_inter)
+    print(fatura_inter)
 
     fatura_pan = read_meliuz(pdf_meliuz)
-    # print(fatura_pan)
+    print(fatura_pan)
 
     # TODO fazer leitura de pdf pan
 
