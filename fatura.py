@@ -3,8 +3,10 @@ import PyPDF2
 import pandas as pd
 import re
 import os
+from pdf2image import convert_from_path
+import pytesseract
 
-BASE = os.getcwd()
+BASE =  os.path.join(os.getcwd(), 'temp')
 
 def get_total_pages(pdf: str) -> int:
     total_pages = 0
@@ -18,7 +20,7 @@ def read_pdf(pdf, pages, header=None) -> pd.DataFrame:
     dfs = tabula.io.read_pdf(pdf,pages=pages)
 
     if len(dfs) > 1:
-        csv_output = os.path.join(BASE, 'temp', "output.csv")
+        csv_output = os.path.join(BASE, "output.csv")
         tabula.convert_into(pdf, csv_output, output_format="csv", pages=pages)
         fatura = pd.read_csv(csv_output, names=header, delimiter=',')
 
@@ -39,7 +41,7 @@ def read_inter(pdf):
     fatura = PyPDF2.PdfReader(pdf)
     text = fatura.pages[1].extract_text()
     dict_fatura = []
-    output = os.path.join(BASE, 'temp', "output.txt")
+    output = os.path.join(BASE, "output.txt")
 
     with open(output, 'w') as fatura_txt:
         fatura_txt.write(text)
@@ -71,6 +73,35 @@ def read_meliuz(pdf):
     
     return df.reset_index(drop=True)
 
+def read_pan(pdf) -> pd.DataFrame:
+    pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Substitua pelo caminho correto
+    output = 'output.txt'
+    fatura = []
+    imagens = convert_from_path(pdf)
+
+    for i, imagem in enumerate(imagens):
+        i += 1
+        
+        if i == 3:
+            texto = pytesseract.image_to_string(imagem)
+            with open(os.path.join(BASE, output), 'w') as fatura_txt:
+                fatura_txt.write(texto)
+                
+    with open(os.path.join(BASE, output), 'r') as fatura_txt:
+        lines = fatura_txt.readlines()
+        for line in lines:
+            line = line.strip()
+            if line:
+                extracted = re.search(r'^(\d{0,}\/\d{0,})(.+)(RS\d{0,},\d{0,}|RS\s\d{0,},\d{0,}|R\$\d{0,},\d{0,}|R\$\s\d{0,},\d{0,})$', line)
+
+                if extracted:
+                    fatura.append({
+                        'Data': extracted.group(1).strip(),
+                        'Movimentacao': extracted.group(2).strip(),
+                        'Valor': extracted.group(3).strip()
+                    })
+
+    return pd.DataFrame(fatura)
 
 if '__main__' == __name__:
     pdf_nubank = 'Nubank_2023-07-23.pdf'
@@ -79,12 +110,15 @@ if '__main__' == __name__:
     pdf_pan = 'pan_2023-07.pdf'
 
     fatura_nubank = read_nubank(pdf_nubank)
-    print(fatura_nubank)
+    print("Nubank", fatura_nubank)
     fatura_inter = read_inter(pdf_inter)
-    print(fatura_inter)
+    print("Inter",fatura_inter)
 
-    fatura_pan = read_meliuz(pdf_meliuz)
-    print(fatura_pan)
+    fatura_meliuz = read_meliuz(pdf_meliuz)
+    print("Meliuz",fatura_meliuz)
+
+    fatura_pan = read_pan(pdf_pan)
+    print("Pan",fatura_pan)
 
     # TODO fazer leitura de pdf pan
 
