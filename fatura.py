@@ -34,6 +34,8 @@ def read_nubank(pdf) -> pd.DataFrame:
     fatura = read_pdf(pdf, pages, header)
     fatura.drop(columns=['Unnamed'], inplace=True)
     fatura.dropna(axis=0, inplace=True)
+    fatura['Cartao'] = 'Nubank'
+    fatura['Tipo de Compra'] = 'Credito'
 
     return fatura
 
@@ -57,12 +59,12 @@ def read_inter(pdf):
                 dict_fatura.append({
                     'Data': extracted.group(1).strip(),
                     'Movimentacao': extracted.group(2).strip(),
-                    'Valor': extracted.group(3).strip()
+                    'Valor': extracted.group(3).strip().replace('R$ ', ''),
+                    'Cartao': 'Inter',
+                    'Tipo de Compra': 'Credito'
                 })
 
-    fatura = pd.DataFrame(dict_fatura)
-
-    return fatura
+    return pd.DataFrame(dict_fatura)
 
 def read_meliuz(pdf):
     pages = f'3-{get_total_pages(pdf)}'
@@ -70,8 +72,12 @@ def read_meliuz(pdf):
     df = df[['Unnamed: 0','Unnamed: 1','Unnamed: 2']]
     df = df.rename(columns={'Unnamed: 0': 'Data', 'Unnamed: 1': 'Movimentacao', 'Unnamed: 2': 'Valor'})
     df = df.dropna()
+    df = df.reset_index(drop=True)
+    df['Valor'] = df['Valor'].str.replace('R$ ', '')
+    df['Cartao'] = 'Meliuz'
+    df['Tipo de Compra'] = 'Credito'
     
-    return df.reset_index(drop=True)
+    return df
 
 def read_pan(pdf) -> pd.DataFrame:
     pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Substitua pelo caminho correto
@@ -98,7 +104,9 @@ def read_pan(pdf) -> pd.DataFrame:
                     fatura.append({
                         'Data': extracted.group(1).strip(),
                         'Movimentacao': extracted.group(2).strip(),
-                        'Valor': extracted.group(3).strip()
+                        'Valor': re.sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
+                        'Cartao': 'Pan',
+                        'Tipo de Compra': 'Credito'
                     })
 
     return pd.DataFrame(fatura)
@@ -110,18 +118,15 @@ if '__main__' == __name__:
     pdf_pan = 'pan_2023-07.pdf'
 
     fatura_nubank = read_nubank(pdf_nubank)
-    print("Nubank", fatura_nubank)
+    print(fatura_nubank)
     fatura_inter = read_inter(pdf_inter)
-    print("Inter",fatura_inter)
+    print(fatura_inter)
 
     fatura_meliuz = read_meliuz(pdf_meliuz)
-    print("Meliuz",fatura_meliuz)
+    print(fatura_meliuz)
 
     fatura_pan = read_pan(pdf_pan)
-    print("Pan",fatura_pan)
+    print(fatura_pan)
 
-    # TODO fazer leitura de pdf pan
-
-            
     
     
