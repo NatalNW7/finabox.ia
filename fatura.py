@@ -5,6 +5,8 @@ import re
 import os
 from pdf2image import convert_from_path
 import pytesseract
+from datetime import datetime
+
 
 BASE =  os.path.join(os.getcwd(), 'temp')
 
@@ -57,7 +59,7 @@ def read_inter(pdf):
 
             if extracted:
                 dict_fatura.append({
-                    'Data': extracted.group(1).strip(),
+                    'Data': converter_formato_data(extracted.group(1).strip()),
                     'Movimentacao': extracted.group(2).strip(),
                     'Valor': extracted.group(3).strip().replace('R$ ', ''),
                     'Cartao': 'Inter',
@@ -102,7 +104,7 @@ def read_pan(pdf) -> pd.DataFrame:
 
                 if extracted:
                     fatura.append({
-                        'Data': extracted.group(1).strip(),
+                        'Data': converter_formato_data(extracted.group(1).strip(), "2023"),
                         'Movimentacao': extracted.group(2).strip(),
                         'Valor': re.sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
                         'Cartao': 'Pan',
@@ -111,22 +113,36 @@ def read_pan(pdf) -> pd.DataFrame:
 
     return pd.DataFrame(fatura)
 
-if '__main__' == __name__:
+def converter_formato_data(data_str: str, year: str = None):
+    meses = {'JAN': '01', 'FEV':'02', 'MAR':'03', 'ABR':'04', 'MAI':'05', 'JUN':'06', 'JUL':'07', 'AGO':'08', 'SET':'09', 'OUT':'10', 'NOV':'11', 'DEZ':'12'}
+    data_str = data_str.upper()
+    mes = re.search(r'[A-Za-z]+', data_str)
+
+    if mes:
+        mes = mes.group(0)
+        data_str = data_str.replace(mes, meses[mes.upper()])
+    
+    data_str += f" {year}" if year and year not in data_str else ""
+    
+    return data_str.replace(" ","/")
+
+def faturas():
     pdf_nubank = 'Nubank_2023-07-23.pdf'
     pdf_inter = 'inter_2023-07.pdf'
     pdf_meliuz = 'meliuz-2023-07.pdf'
     pdf_pan = 'pan_2023-07.pdf'
 
     fatura_nubank = read_nubank(pdf_nubank)
-    print(fatura_nubank)
     fatura_inter = read_inter(pdf_inter)
-    print(fatura_inter)
-
     fatura_meliuz = read_meliuz(pdf_meliuz)
-    print(fatura_meliuz)
-
     fatura_pan = read_pan(pdf_pan)
-    print(fatura_pan)
 
+    faturas = pd.concat([fatura_nubank, fatura_meliuz, fatura_inter, fatura_pan], ignore_index=True)
+    faturas['Data'] = faturas['Data'].apply(converter_formato_data, year='2023')
+
+    return faturas
+
+if '__main__' == __name__:
+    print(faturas())
     
     
