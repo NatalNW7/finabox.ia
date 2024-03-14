@@ -1,121 +1,53 @@
 {
-    "99app": [
-        "99app *99app"
-    ],
-    "Atacadão": [
-        "Atacadao 251 As"
-    ],
-    "Drogaria Atacadão": [
-        "Drogaria Atacadao Ina"
-    ],
-    "Extra": [
-        "Mercado Extra-1864"
-    ],
-    "Studio Benx": [
-        "Pag*Brenonascimento"
-    ],  
-    "Dentista": [
-        "N Clinica Odont"
-    ],
-    "Amazon Music": [
-        "Amazon Music"
-    ],
-    "Pizzaria Bella Arte": [
-        "Pizzaria Bella Arte"
-    ],
-    "ifood Restaurante": [
-        "Ifood *ifd*Mcdonalds"
-    ],
-    "ifood Mercado":[
-        "Ifood *ifd*Rede Mais"
-    ],
-    "ifood Padaria":[
-        "Ifood *ifd*Padaria I",
-        "Ifood *ifd*Padaria e"
-    ],
-    "Humanas Academia": [
-        "Pac Fazendo O Bem Acad"
-    ],
-    "Uber": [
-        "Uber *Trip"
-    ],
-    "Cinemark": [
-        "Cinemark West Plaza",
-        "Cinemark Brasil"
-    ],
-    "Amazon prime": [
-        "Amazonprimebr",
-        "Amazon Prime Aluguel"
-    ],
-    "Nubank": [
-        "Nubank Celular Seguro"
-    ],
-    "Eco Jordao": [
-        "Eco Jordao"
-    ],
-    "Maria das Gracas Rios": [
-        "Maria das Gracas Rios"
-    ],
-    "Estancia Grill": [
-        "Estancia Grill"
-    ],
-    "Portal da Cidade": [
-        "Portal da Cidade"
-    ],
-    "Quebrada Burger": [
-        "Quebrada Burger"
-    ],
-    "Gscell Acessorios": [
-        "Gscell Acessorios"
-    ],
-    "Johnny Rockets": [
-        "Pag*Johnnyrockets"
-    ],
-    "Hotmart": [
-        "Ebn*Hotmart"
-    ],
-    "Baiao de II Cachoeirinha": [
-        "Baiao de Ii Cachoeiri"
-    ],
-    "Paes e Doces Trigosu": [
-        "Paes e Doces Trigosu"
-    ],
-    "Shein": [
-        "DI *Sheinbr"
-    ],
-    "Puma": [
-        "Mercpago *Pumas"
-    ],
-    "Authentic Feet": [
-        "Pg *Authentic Feet"
-    ],
-    "Decinel": [
-        "Mercpago *Blacksui"
-    ],
-    "Andorinha": [
-        "Andorinha Hiper"
-    ],
-    "Mercado Livre": [
-        "Mercadolivre*TYAGODEB",
-        "Mercadolivre*Meli",
-        "Mercadolivre Musicalri"
-    ],
-    "TIM": [
-        "TIM"
-    ],
-    "Droga Barao": [
-        "Droga Barao"
-    ],
-    "Pag*Amorearte":[
-        "Pag*Amorearte"
-    ],
-    "Pag*Coquelicotparis":[
-        "Pag*Coquelicotparis"
-    ],
-    "Pag*Emporioserraa":[
-        "Pag*Emporioserraa"
-    ],
-    "Pag*Saborettos":[
-        "Pag*Saborettos"
-    ]
+  "99app": ["99app *99app"],
+  "Amazon Music": ["amazon music"],
+  "A Toca": ["a toca"],
+  "Amazon prime": ["amazonprimebr", "amazon prime aluguel"],
+  "Andorinha": ["andorinha hiper"],
+  "Atacad\u00e3o": ["atacadao 251 as"],
+  "Authentic Feet": ["pg *authentic feet"],
+  "Baiao de II Cachoeirinha": ["baiao de ii cachoeiri"],
+  "Bijumaster Comercio": ["bijumaster comercio"],
+  "Cinemark": ["cinemark west plaza", "cinemark brasil"],
+  "C&A": ["cea san 360 ecpc"],
+  "Decinel": ["mercpago *blacksui", "mercadolivre*blacksui"],
+  "Dentista": ["n clinica odont"],
+  "Droga Barao": ["droga barao"],
+  "Drogaria Atacad\u00e3o": ["drogaria atacadao ina"],
+  "Eco Jordao": ["eco jordao"],
+  "Estancia Grill": ["estancia grill"],
+  "Extra": ["mercado extra-1864"],
+  "Grupo Gennius": ["grupoge*grupo gennius"],
+  "Gscell Acessorios": ["gscell acessorios"],
+  "Hotmart": ["ebn*hotmart"],
+  "Humanas Academia": ["pac fazendo o bem acad"],
+  "Johnny Rockets": ["pag*johnnyrockets"],
+  "Maria das Gracas Rios": ["maria das gracas rios"],
+  "Mercado Livre": [
+    "mercadolivre*tyagodeb",
+    "mercadolivre*meli",
+    "mercadolivre musicalri",
+    "mercadolivre*mercadol",
+    "mercadolivre*musicalri"
+  ],
+  "Nubank": ["nubank celular seguro"],
+  "Paes e Doces Trigosu": ["paes e doces trigosu"],
+  "Pag*Amorearte": ["pag*amorearte"],
+  "Pag*Coquelicotparis": ["pag*coquelicotparis"],
+  "Pag*Emporioserraa": ["pag*emporioserraa"],
+  "Pag*Saborettos": ["pag*saborettos"],
+  "Pizzaria Bella Arte": ["pizzaria bella arte"],
+  "Portal da Cidade": ["portal da cidade"],
+  "Puma": ["mercpago *pumas"],
+  "Quebrada Burger": ["quebrada burger"],
+  "Shein": ["di *sheinbr"],
+  "Studio Benx": ["pag*brenonascimento"],
+  "TIM": ["tim", "tim*11954129794"],
+  "Uber": ["uber *trip", "uber *uber *trip"],
+  "ifood Mercado": ["ifood *ifd*rede mais"],
+  "ifood Padaria": ["ifood *ifd*padaria i", "ifood *ifd*padaria e"],
+  "ifood Restaurante": ["ifood *ifd*mcdonalds"],
+  "Htm*Canteexcelparc": ["htm*canteexcel"],
+  "Pag*Daletereboucas": ["pag*daletereboucas"],
+  "Viviana Patricia De Pa": ["viviana patricia de pa"]
 }
