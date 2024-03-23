@@ -6,6 +6,7 @@ import os
 from pdf2image import convert_from_path
 import pytesseract
 from datetime import datetime
+import uuid
 
 
 BASE =  os.path.join(os.getcwd(), 'temp')
@@ -126,6 +127,14 @@ def converter_formato_data(data_str: str, year: str = None):
     
     return data_str.replace(" ","/")
 
+def to_float(num: str) -> float:
+    num = num.replace('.', '').replace(',', '.')
+
+    return float(num)
+
+def generate_uuid(*agr) -> str:
+    return str(uuid.uuid4())
+
 def faturas():
     pdf_nubank = 'Nubank_2023-07-23.pdf'
     pdf_inter = 'inter_2023-07.pdf'
@@ -139,10 +148,14 @@ def faturas():
 
     faturas = pd.concat([fatura_nubank, fatura_meliuz, fatura_inter, fatura_pan], ignore_index=True)
     faturas['Data'] = faturas['Data'].apply(converter_formato_data, year='2023')
+    faturas['Valor'] = faturas['Valor'].apply(to_float)
+    faturas['unique_id'] = 'unique_id'
+    faturas['unique_id'] = faturas['unique_id'].apply(generate_uuid)
 
     return faturas
 
 if '__main__' == __name__:
-    print(faturas())
+    fatura = faturas() 
+    print(fatura[fatura['Movimentacao'].str.contains('Uber')])
     
     

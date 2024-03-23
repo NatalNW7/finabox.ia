@@ -1,15 +1,12 @@
 import pandas as pd
 
 # Criar um DataFrame de exemplo
-dados = {'Nomes': ['Alice', 'Bob', 'Charlie', 'David']}
-df = pd.DataFrame(dados)
+data1 = pd.read_csv('Controle Financeiro - Cartao.csv')
+dados2 = pd.read_csv('controle-financeiro-teste.csv')
 
-# Função para converter nomes para maiúsculas
-def converter_para_maiusculas(nome):
-    return nome.upper()
+# print(data1)
+# print(dados2)
 
-# Aplicar a função à coluna 'Nomes' usando apply
-df['Nomes'] = df['Nomes'].apply(converter_para_maiusculas)
+deferenca = pd.concat([data1,dados2])
 
-# Imprimir o DataFrame resultante
-print(df)
+print(deferenca.sort_values(by=['Valor']).drop_duplicates())

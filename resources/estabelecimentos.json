@@ -40,7 +40,10 @@
   "Portal da Cidade": ["portal da cidade"],
   "Puma": ["mercpago *pumas"],
   "Quebrada Burger": ["quebrada burger"],
-  "Shein": ["di *sheinbr"],
+  "Shein": [
+    "dl *sheinbr",
+    "reversão do crédito de confiança de \"dl *sheinbr\""
+  ],
   "Studio Benx": ["pag*brenonascimento"],
   "TIM": ["tim", "tim*11954129794"],
   "Uber": ["uber *trip", "uber *uber *trip"],
