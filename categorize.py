@@ -25,7 +25,7 @@ def carrega_estabelecimentos():
 def set_estabelecimento(fatura: pd.DataFrame) -> pd.DataFrame:
     estabelecimentos=carrega_estabelecimentos()
     dataframes = []
-    movimentacoes = fatura['Movimentacao'].apply(clean_movimentacao)
+    movimentacoes = fatura['TRANSACTION'].apply(clean_movimentacao)
     movimentacoes = list(movimentacoes.unique().tolist())
     movimentacoes.sort()
 
@@ -39,15 +39,15 @@ def set_estabelecimento(fatura: pd.DataFrame) -> pd.DataFrame:
 
         for key, values in estabelecimentos.items():
             if movimentacao in values:
-                df = fatura[fatura['Movimentacao'].str.contains(movimentacao.replace('*', '\*'), flags=re.IGNORECASE, regex=True)]
-                df['Estabelecimento'] = key
+                df = fatura[fatura['TRANSACTION'].str.contains(movimentacao.replace('*', '\*'), flags=re.IGNORECASE, regex=True)]
+                df['ESTABLISHMENT'] = key
                 dataframes.append(df)
                 has_estabelecimento = True
                 break
                     
         if not has_estabelecimento:
-            df = fatura[fatura['Movimentacao'].str.contains(movimentacao.replace('*', '\*'), flags=re.IGNORECASE, regex=True)]
-            df['Estabelecimento'] = 'Sem Estabelecimento'
+            df = fatura[fatura['TRANSACTION'].str.contains(movimentacao.replace('*', '\*'), flags=re.IGNORECASE, regex=True)]
+            df['ESTABLISHMENT'] = 'Sem Estabelecimento'
             dataframes.append(df)
     
     return pd.concat(dataframes, ignore_index=True, sort=True)
@@ -55,15 +55,15 @@ def set_estabelecimento(fatura: pd.DataFrame) -> pd.DataFrame:
 def set_categoria(fatura: pd.DataFrame) -> pd.DataFrame:
     categorias=carrega_categorias()
     dataframes = []
-    estabelecimentos = fatura['Estabelecimento']
+    estabelecimentos = fatura['ESTABLISHMENT']
     estabelecimentos = list(estabelecimentos.unique().tolist())
     estabelecimentos.sort()
 
     for estabelecimento in estabelecimentos:
         for key, values in categorias.items():
             if estabelecimento in values:
-                df = fatura[fatura['Estabelecimento'] == estabelecimento]
-                df['Categoria'] = key
+                df = fatura[fatura['ESTABLISHMENT'] == estabelecimento]
+                df['CATEGORY'] = key
                 dataframes.append(df)
                 break
     
@@ -80,7 +80,7 @@ def clean_movimentacao(movimentacao: str):
 
 def clean_fatura(fatura: pd.DataFrame) -> pd.DataFrame:
     fatura = fatura.drop_duplicates(subset=['unique_id'])
-    fatura = fatura[~fatura['Movimentacao'].str.contains('\+')]
+    fatura = fatura[~fatura['TRANSACTION'].str.contains('\+')]
 
     return fatura.reset_index(drop=True, inplace=False)
 
@@ -95,6 +95,6 @@ def categorize_fatura() -> pd.DataFrame:
 if '__main__' == __name__:
     fatura = categorize_fatura()
     print(fatura)
-    print(fatura['Valor'].sum())
+    print(fatura['PRICE'].sum())
 
     # fatura.to_csv('controle-fianceiro-teste.csv', index=False)

@@ -32,13 +32,13 @@ def read_pdf(pdf, pages, header=None) -> pd.DataFrame:
     return dfs[0]
 
 def read_nubank(pdf) -> pd.DataFrame:
-    header=['Data', 'Unnamed', 'Movimentacao', 'Valor']
+    header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
     pages = f'4-{get_total_pages(pdf)}'
     fatura = read_pdf(pdf, pages, header)
     fatura.drop(columns=['Unnamed'], inplace=True)
     fatura.dropna(axis=0, inplace=True)
-    fatura['Cartao'] = 'Nubank'
-    fatura['Tipo de Compra'] = 'Credito'
+    fatura['BANK'] = 'Nubank'
+    fatura['PAYMENT_TYPE'] = 'Credito'
 
     return fatura
 
@@ -60,11 +60,11 @@ def read_inter(pdf):
 
             if extracted:
                 dict_fatura.append({
-                    'Data': converter_formato_data(extracted.group(1).strip()),
-                    'Movimentacao': extracted.group(2).strip(),
-                    'Valor': extracted.group(3).strip().replace('R$ ', ''),
-                    'Cartao': 'Inter',
-                    'Tipo de Compra': 'Credito'
+                    'DATE': converter_formato_data(extracted.group(1).strip()),
+                    'TRANSACTION': extracted.group(2).strip(),
+                    'PRICE': extracted.group(3).strip().replace('R$ ', ''),
+                    'BANK': 'Inter',
+                    'PAYMENT_TYPE': 'Credito'
                 })
 
     return pd.DataFrame(dict_fatura)
@@ -73,12 +73,12 @@ def read_meliuz(pdf):
     pages = f'3-{get_total_pages(pdf)}'
     df = read_pdf(pdf, pages=pages)
     df = df[['Unnamed: 0','Unnamed: 1','Unnamed: 2']]
-    df = df.rename(columns={'Unnamed: 0': 'Data', 'Unnamed: 1': 'Movimentacao', 'Unnamed: 2': 'Valor'})
+    df = df.rename(columns={'Unnamed: 0': 'DATE', 'Unnamed: 1': 'TRANSACTION', 'Unnamed: 2': 'PRICE'})
     df = df.dropna()
     df = df.reset_index(drop=True)
-    df['Valor'] = df['Valor'].str.replace('R$ ', '')
-    df['Cartao'] = 'Meliuz'
-    df['Tipo de Compra'] = 'Credito'
+    df['PRICE'] = df['PRICE'].str.replace('R$ ', '')
+    df['BANK'] = 'Meliuz'
+    df['PAYMENT_TYPE'] = 'Credito'
     
     return df
 
@@ -105,11 +105,11 @@ def read_pan(pdf) -> pd.DataFrame:
 
                 if extracted:
                     fatura.append({
-                        'Data': converter_formato_data(extracted.group(1).strip(), "2023"),
-                        'Movimentacao': extracted.group(2).strip(),
-                        'Valor': re.sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
-                        'Cartao': 'Pan',
-                        'Tipo de Compra': 'Credito'
+                        'DATE': converter_formato_data(extracted.group(1).strip(), "2023"),
+                        'TRANSACTION': extracted.group(2).strip(),
+                        'PRICE': re.sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
+                        'BANK': 'Pan',
+                        'PAYMENT_TYPE': 'Credito'
                     })
 
     return pd.DataFrame(fatura)
@@ -147,8 +147,8 @@ def faturas():
     fatura_pan = read_pan(pdf_pan)
 
     faturas = pd.concat([fatura_nubank, fatura_meliuz, fatura_inter, fatura_pan], ignore_index=True)
-    faturas['Data'] = faturas['Data'].apply(converter_formato_data, year='2023')
-    faturas['Valor'] = faturas['Valor'].apply(to_float)
+    faturas['DATE'] = faturas['DATE'].apply(converter_formato_data, year='2023')
+    faturas['PRICE'] = faturas['PRICE'].apply(to_float)
     faturas['unique_id'] = 'unique_id'
     faturas['unique_id'] = faturas['unique_id'].apply(generate_uuid)
 
@@ -156,6 +156,6 @@ def faturas():
 
 if '__main__' == __name__:
     fatura = faturas() 
-    print(fatura[fatura['Movimentacao'].str.contains('Uber')])
+    print(fatura[fatura['TRANSACTION'].str.contains('Uber')])
     
     
