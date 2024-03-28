@@ -2,7 +2,7 @@ import json
 import os
 import re
 
-from fatura import faturas
+from bill_reader import bill_reader
 import pandas as pd
 
 
@@ -79,13 +79,20 @@ def clean_movimentacao(movimentacao: str):
     return movimentacao.lower()
 
 def clean_fatura(fatura: pd.DataFrame) -> pd.DataFrame:
-    fatura = fatura.drop_duplicates(subset=['unique_id'])
+    fatura = fatura.drop_duplicates(subset=['UUID'])
     fatura = fatura[~fatura['TRANSACTION'].str.contains('\+')]
 
     return fatura.reset_index(drop=True, inplace=False)
 
 def categorize_fatura() -> pd.DataFrame:
-    fatura = faturas()
+    files = {
+        'nubank': 'Nubank_2023-07-23.pdf',
+        'inter': 'inter_2023-07.pdf',
+        'meliuz': 'meliuz-2023-07.pdf',
+        'pan': 'pan_2023-07.pdf'
+    }
+
+    fatura = bill_reader(files)
     fatura_com_estabelecimento = set_estabelecimento(fatura)
     fatura_categorizada = set_categoria(fatura_com_estabelecimento)
     cleaned_fatura = clean_fatura(fatura_categorizada)

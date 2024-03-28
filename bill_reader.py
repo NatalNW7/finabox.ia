@@ -6,7 +6,8 @@ import os
 from pdf2image import convert_from_path
 from pytesseract import pytesseract
 import uuid
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+
 
 BASE =  os.path.join(os.getcwd(), 'temp')
 
@@ -31,8 +32,9 @@ class Pdf(PdfReader):
 
         return dfs[0]
 
-class BillReader(Pdf):
-    def convert_date_format(self, data_str: str, year: str = None):
+class BillUtils():
+    @staticmethod
+    def convert_date_format(data_str: str, year: str = None):
         meses = {'JAN': '01', 'FEV':'02', 'MAR':'03', 'ABR':'04', 'MAI':'05', 'JUN':'06', 'JUL':'07', 'AGO':'08', 'SET':'09', 'OUT':'10', 'NOV':'11', 'DEZ':'12'}
         data_str = data_str.upper()
         mes = re.search(r'[A-Za-z]+', data_str)
@@ -45,11 +47,29 @@ class BillReader(Pdf):
         
         return data_str.replace(" ","/")
 
-class NubankBill(BillReader):
+    @staticmethod
+    def to_float(num: str) -> float:
+        num = num.replace('.', '').replace(',', '.')
+        return float(num)
+
+    @staticmethod
+    def generate_uuid(arg) -> str:
+        return str(uuid.uuid4())
+
+class BillInterface(ABC):
+
+    def __init__(self, file_path: str) -> None:
+        super().__init__()
+        self.pdf = Pdf(file_path)
+
+    @abstractmethod
+    def read_bill(self) -> pd.DataFrame: ...
+
+class NubankBill(BillInterface):
     def read_bill(self) -> pd.DataFrame:
         header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
-        pages = f'4-{self.total_pages}'
-        bill = self.to_dataframe(pages, header)
+        pages = f'4-{self.pdf.total_pages}'
+        bill = self.pdf.to_dataframe(pages, header)
         bill.drop(columns=['Unnamed'], inplace=True)
         bill.dropna(axis=0, inplace=True)
         bill['BANK'] = 'Nubank'
@@ -57,9 +77,9 @@ class NubankBill(BillReader):
 
         return bill
 
-class InterBill(BillReader):
+class InterBill(BillInterface):
     def read_bill(self):
-        text = self.pages[1].extract_text()
+        text = self.pdf.pages[1].extract_text()
         dict_fatura = []
         output = os.path.join(BASE, "output.txt")
 
@@ -75,7 +95,7 @@ class InterBill(BillReader):
 
                 if extracted:
                     dict_fatura.append({
-                        'DATE': self.convert_date_format(extracted.group(1).strip()),
+                        'DATE': BillUtils.convert_date_format(extracted.group(1).strip()),
                         'TRANSACTION': extracted.group(2).strip(),
                         'PRICE': extracted.group(3).strip().replace('R$ ', ''),
                         'BANK': 'Inter',
@@ -84,10 +104,10 @@ class InterBill(BillReader):
 
         return pd.DataFrame(dict_fatura)
 
-class MeliuzBill(BillReader):
+class MeliuzBill(BillInterface):
     def read_bill(self):
-        pages = f'3-{self.total_pages}'
-        df = self.to_dataframe(pages=pages)
+        pages = f'3-{self.pdf.total_pages}'
+        df = self.pdf.to_dataframe(pages=pages)
         df = df[['Unnamed: 0','Unnamed: 1','Unnamed: 2']]
         df = df.rename(columns={'Unnamed: 0': 'DATE', 'Unnamed: 1': 'TRANSACTION', 'Unnamed: 2': 'PRICE'})
         df = df.dropna()
@@ -97,12 +117,13 @@ class MeliuzBill(BillReader):
         df['PAYMENT_TYPE'] = 'Credit'
         
         return df
-class PanBill(BillReader):
+    
+class PanBill(BillInterface):
     def read_bill(self) -> pd.DataFrame:
         pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Substitua pelo caminho correto
         output = os.path.join(BASE, 'output.txt')
         bill = []
-        images = convert_from_path(self.file_path)
+        images = convert_from_path(self.pdf.file_path)
 
         for i, image in enumerate(images):
             i += 1
@@ -123,7 +144,7 @@ class PanBill(BillReader):
 
                     if extracted:
                         bill.append({
-                            'DATE': self.convert_date_format(extracted.group(1).strip(), "2023"),
+                            'DATE': BillUtils.convert_date_format(extracted.group(1).strip(), "2023"),
                             'TRANSACTION': extracted.group(2).strip(),
                             'PRICE': re.sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
                             'BANK': 'Pan',
@@ -132,35 +153,35 @@ class PanBill(BillReader):
 
         return pd.DataFrame(bill)
 
+from enum import Enum
 
-    def to_float(self, num: str) -> float:
-        num = num.replace('.', '').replace(',', '.')
+class Bank(Enum):
+    NUBANK = NubankBill
 
-        return float(num)
 
-    def generate_uuid(self, *args) -> str:
-        return str(uuid.uuid4())
 
-def faturas(**files: str):
-    BILLS = {
-        'NUBANK':...,
-        'INTER':...,
-        'PAN':...,
-        'MELIUZ':...
-    }
-    
-    nubank = read_nubank(pdf_nubank)
-    inter = read_inter(pdf_inter)
-    meliuz = read_meliuz(pdf_meliuz)
-    pan = read_pan(pdf_pan)
+class BillReader:
+    def __init__(self, files: dict[str, str]) -> None:
+        self.__files = files
+        self.__BANKS = {
+            'nubank': NubankBill,
+            'inter': InterBill,
+            'pan': PanBill,
+            'meliuz': MeliuzBill
+        }
+        self.bills = []
 
-    bills = pd.concat([nubank, meliuz, inter, pan], ignore_index=True)
-    bills['DATE'] = bills['DATE'].apply(convert_date_format, year='2023')
-    bills['PRICE'] = bills['PRICE'].apply(to_float)
-    bills['UUID'] = 'UUID'
-    bills['UUID'] = bills['UUID'].apply(generate_uuid)
+    def bill_reader(self):
+        for bank, file in self.__files.items():
+            self.bills.append(self.__BANKS[bank.lower()](file).read_bill())
 
-    return bills
+        bill = pd.concat(self.bills, ignore_index=True)
+        bill['DATE'] = bill['DATE'].apply(BillUtils.convert_date_format, year='2023')
+        bill['PRICE'] = bill['PRICE'].apply(BillUtils.to_float)
+        bill['UUID'] = 'UUID'
+        bill['UUID'] = bill['UUID'].apply(BillUtils.generate_uuid)
+
+        return bill
 
 if '__main__' == __name__:
     pdf_nubank = 'Nubank_2023-07-23.pdf'
@@ -176,7 +197,8 @@ if '__main__' == __name__:
     print(meliuz)
     pan = PanBill(pdf_pan).read_bill()
     print(pan)
-    # fatura = faturas() 
-    # print(fatura[fatura['TRANSACTION'].str.contains('Uber')])
+
+    # bill = bill_reader(nubank='Nubank_2023-07-23.pdf', inter='inter_2023-07.pdf', meliuz='meliuz-2023-07.pdf', pan='pan_2023-07.pdf') 
+    # print(bill)
     
     
