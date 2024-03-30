@@ -10,6 +10,8 @@ from abc import ABC, abstractmethod
 
 
 BASE =  os.path.join(os.getcwd(), 'temp')
+if not os.path.exists(BASE):
+    os.mkdir(BASE)
 
 class Pdf(PdfReader):
     def __init__(self, file_path) -> None:
@@ -34,7 +36,7 @@ class Pdf(PdfReader):
 
 class BillUtils():
     @staticmethod
-    def convert_date_format(data_str: str, year: str = None):
+    def convert_date_format(data_str: str, year: str = None) -> str:
         meses = {'JAN': '01', 'FEV':'02', 'MAR':'03', 'ABR':'04', 'MAI':'05', 'JUN':'06', 'JUL':'07', 'AGO':'08', 'SET':'09', 'OUT':'10', 'NOV':'11', 'DEZ':'12'}
         data_str = data_str.upper()
         mes = re.search(r'[A-Za-z]+', data_str)
@@ -58,8 +60,11 @@ class BillUtils():
 
 class BillInterface(ABC):
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self) -> None:
         super().__init__()
+        self.pdf = None
+
+    def load_pdf(self, file_path: str):
         self.pdf = Pdf(file_path)
 
     @abstractmethod
@@ -153,29 +158,39 @@ class PanBill(BillInterface):
 
         return pd.DataFrame(bill)
 
-from enum import Enum
-
-class Bank(Enum):
-    NUBANK = NubankBill
-
-
-
 class BillReader:
     def __init__(self, files: dict[str, str]) -> None:
         self.__files = files
-        self.__BANKS = {
-            'nubank': NubankBill,
-            'inter': InterBill,
-            'pan': PanBill,
-            'meliuz': MeliuzBill
+        self.__BANKS: dict[str, BillInterface] = {
+            'nubank': NubankBill(),
+            'inter': InterBill(),
+            'pan': PanBill(),
+            'meliuz': MeliuzBill()
         }
-        self.bills = []
+        self.__bills = []
+        self.bills_reader()
 
-    def bill_reader(self):
+    @property
+    def bills(self) -> list[pd.DataFrame]:
+        "Return list of each bank bill"
+        return self.__bills
+
+    @property
+    def bill(self) -> pd.DataFrame:
+        "Return bill of all banks in a single dataframe"
+        return self.__parsed_bill()
+
+    def bills_reader(self):
         for bank, file in self.__files.items():
-            self.bills.append(self.__BANKS[bank.lower()](file).read_bill())
+            bank_bill = self.__BANKS[bank.lower()]
+            bank_bill.load_pdf(file)
+            self.__bills.append(bank_bill.read_bill())
 
-        bill = pd.concat(self.bills, ignore_index=True)
+    def __concat(self) -> pd.DataFrame:
+        return pd.concat(self.__bills, ignore_index=True)
+
+    def __parsed_bill(self):
+        bill = self.__concat()
         bill['DATE'] = bill['DATE'].apply(BillUtils.convert_date_format, year='2023')
         bill['PRICE'] = bill['PRICE'].apply(BillUtils.to_float)
         bill['UUID'] = 'UUID'
@@ -184,21 +199,27 @@ class BillReader:
         return bill
 
 if '__main__' == __name__:
-    pdf_nubank = 'Nubank_2023-07-23.pdf'
-    pdf_inter = 'inter_2023-07.pdf'
-    pdf_meliuz = 'meliuz-2023-07.pdf'
-    pdf_pan = 'pan_2023-07.pdf'
+    pdfs = {
+        'nubank': 'Nubank_2023-07-23.pdf',
+        'inter': 'inter_2023-07.pdf',
+        'pan': 'pan_2023-07.pdf',
+        'meliuz': 'meliuz-2023-07.pdf'
+    }
 
-    nubank = NubankBill(pdf_nubank).read_bill()
-    print(nubank)
-    inter = InterBill(pdf_inter).read_bill()
-    print(inter)
-    meliuz = MeliuzBill(pdf_meliuz).read_bill()
-    print(meliuz)
-    pan = PanBill(pdf_pan).read_bill()
-    print(pan)
+    # nubank = NubankBill()
+    # nubank.load_pdf(pdfs['nubank'])
+    # # print(nubank.read_bill())
+    # inter = InterBill()
+    # inter.load_pdf(pdfs['inter'])
+    # # print(inter.read_bill())
+    # meliuz = MeliuzBill()
+    # meliuz.load_pdf(pdfs['meliuz'])
+    # # print(meliuz.read_bill())
+    # pan = PanBill()
+    # pan.load_pdf(pdfs['pan'])
+    # # print(pan.read_bill())
 
-    # bill = bill_reader(nubank='Nubank_2023-07-23.pdf', inter='inter_2023-07.pdf', meliuz='meliuz-2023-07.pdf', pan='pan_2023-07.pdf') 
-    # print(bill)
-    
+    bill_reader = BillReader(pdfs)
+
+    print(bill_reader.bill)
     
