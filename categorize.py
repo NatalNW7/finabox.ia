@@ -2,7 +2,7 @@ import json
 import os
 import re
 
-from bill_reader import bill_reader
+from models.bill_reader import bill_reader
 import pandas as pd
 
 
