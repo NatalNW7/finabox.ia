@@ -12,7 +12,7 @@ class BillUtils():
             mes = mes.group(0)
             data_str = data_str.replace(mes, meses[mes.upper()])
         
-        data_str += f" {year}" if year and year not in data_str else ""
+        data_str += f" {year}" if year and (year not in data_str) else ""
         
         return data_str.replace(" ","/")
 
