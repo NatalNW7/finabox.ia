@@ -14,7 +14,7 @@ from pytest import mark
         ("05/06", "05/06/2023"),
         ("20/06", "20/06/2023"), 
         ("01/07", "01/07/2023"),
-    ],
+    ]
 )
 def test_convert_date_format(input, output):
     assert BillUtils.convert_date_format(input, year='2023') == output

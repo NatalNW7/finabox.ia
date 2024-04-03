@@ -47,29 +47,4 @@ class BillReader:
         bill['UUID'] = bill['UUID'].apply(BillUtils.generate_uuid)
 
         return bill
-
-if '__main__' == __name__:
-    pdfs = {
-        'nubank': 'Nubank_2023-07-23.pdf',
-        'inter': 'inter_2023-07.pdf',
-        'pan': 'pan_2023-07.pdf',
-        'meliuz': 'meliuz-2023-07.pdf'
-    }
-
-    # nubank = NubankBill()
-    # nubank.load_pdf(pdfs['nubank'])
-    # # print(nubank.read_bill())
-    # inter = InterBill()
-    # inter.load_pdf(pdfs['inter'])
-    # # print(inter.read_bill())
-    # meliuz = MeliuzBill()
-    # meliuz.load_pdf(pdfs['meliuz'])
-    # # print(meliuz.read_bill())
-    # pan = PanBill()
-    # pan.load_pdf(pdfs['pan'])
-    # # print(pan.read_bill())
-
-    bill_reader = BillReader(pdfs)
-
-    print(bill_reader.bill)
     
