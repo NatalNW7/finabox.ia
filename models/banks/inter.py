@@ -1,22 +1,21 @@
-from os.path import join
+
 
 from pandas import DataFrame
 from utils import BillUtils
 from re import sub, search
 from interfaces import BillInterface
-from utils import temp_path
+from utils.file import writer, reader
+
 class InterBill(BillInterface):
     def _extract_text(self) -> list[str]:
         text = self.pdf.pages[1].extract_text()
-        output = join(temp_path(), "output.txt")
-        
-        with open(output, 'w') as file:
-            file.write(text)
 
-        with open(output, 'r') as file:
-            text = file.readlines()
-        
-        return text
+        if writer(text):
+            lines = reader()
+        else:
+            raise Exception("Error to write content")
+       
+        return lines
  
     def read_bill(self):
         dict_fatura = []

@@ -1,5 +1,6 @@
 from interfaces import BillInterface
 
+
 class NubankBill(BillInterface):
     def read_bill(self):
         header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']

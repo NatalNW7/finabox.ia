@@ -1,5 +1,5 @@
 from models import BillReader
-import pytest
+
 
 def test_bill_reader():
     pdfs = {

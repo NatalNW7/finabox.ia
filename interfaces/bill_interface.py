@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from models import Pdf
 from pandas import DataFrame
 
+
 class BillInterface(ABC):
     def __init__(self) -> None:
         super().__init__()

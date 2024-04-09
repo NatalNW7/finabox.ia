@@ -9,12 +9,13 @@ from .banks import (
 )
 
 class BillReader:
-    def __init__(self, files: dict[str, str]) -> None:
+    def __init__(self, files: dict[str, str], default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
         self.__files = files
+        self.__default_tesseract_cmd = default_tesseract_cmd
         self.__BANKS: dict[str, BillInterface] = {
             'nubank': NubankBill(),
             'inter': InterBill(),
-            'pan': PanBill(),
+            'pan': PanBill(default_tesseract_cmd=self.__default_tesseract_cmd),
             'meliuz': MeliuzBill()
         }
         self.__bills = []

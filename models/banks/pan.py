@@ -5,26 +5,26 @@ from interfaces import BillInterface
 from re import search, sub
 from utils import BillUtils
 from pandas import DataFrame
-from utils import temp_path
+from utils.file import writer, reader
+
 
 class PanBill(BillInterface):
+    def __init__(self, default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
+        super().__init__()
+        self.__default_tesseract_cmd = default_tesseract_cmd
+
     def _extract_text(self) -> list[str]:
-        pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-        output = join(temp_path(), 'output.txt')
+        pytesseract.tesseract_cmd = self.__default_tesseract_cmd
         images = convert_from_path(self.pdf.file_path)
 
         for i, image in enumerate(images):
             i += 1
             if i == 3:
                 image_content = pytesseract.image_to_string(image)
-                with open(output, 'w') as file:
-                    file.write(image_content)
+                writer(image_content)
                 break
-
-        with open(output, 'r') as file:
-            lines = file.readlines()
         
-        return lines
+        return reader()
 
     def read_bill(self):
         dict_fatura = []
