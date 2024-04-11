@@ -1,0 +1,36 @@
+{
+  "Cabeleireiro": ["Studio Benx"],
+  "Cinema": ["Cinemark"],
+  "Eletronicos": ["Gscell Acessorios"],
+  "Esportes": [],
+  "Estudo": ["Hotmart"],
+  "Lazer": ["Eco Jordao"],
+  "Outros": ["Portal da Cidade", "Mercado Livre", "Bijumaster Comercio"],
+  "Padaria": ["ifood Padaria", "Paes e Doces Trigosu"],
+  "Restaurante": [
+    "Pizzaria Bella Arte",
+    "ifood Restaurante",
+    "Maria das Gracas Rios",
+    "Estancia Grill",
+    "Quebrada Burger",
+    "Johnny Rockets",
+    "Baiao de II Cachoeirinha",
+    "Pag*Coquelicotparis",
+    "Pag*Emporioserraa",
+    "Pag*Saborettos",
+    "Grupo Gennius"
+  ],
+  "Saude": ["Drogaria Atacadão", "Dentista", "Humanas Academia", "Droga Barao"],
+  "Seguro": ["Nubank"],
+  "Serviços": ["TIM", "Pag*Daletereboucas", "A Toca", "Pag*Daletereboucas"],
+  "Streaming": ["Amazon Music", "Amazon prime"],
+  "Supermercado": ["Atacadão", "Extra", "ifood Mercado", "Andorinha"],
+  "Transporte": ["99app", "Uber"],
+  "Vestuario": ["Shein", "Puma", "Authentic Feet", "Decinel", "C&A"],
+  "Sem Categoria": [
+    "Htm*Canteexcelparc",
+    "Viviana Patricia De Pa",
+    "Pag*Amorearte"
+  ],
+  "Estorno": ["depósito de confiança", "estorno de", "+"]
+}
