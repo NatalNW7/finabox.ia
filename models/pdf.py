@@ -2,7 +2,7 @@ from pandas import DataFrame, read_csv
 import tabula
 from PyPDF2 import PdfReader
 from os.path import join
-from utils import temp_path
+from utils import PathConstants
 
 class Pdf(PdfReader):
     def __init__(self, file_path) -> None:
@@ -17,7 +17,7 @@ class Pdf(PdfReader):
         dfs = tabula.io.read_pdf(self.file_path, pages=pages)
 
         if len(dfs) > 1:
-            output_file = join(temp_path(), "output.csv")
+            output_file = PathConstants.OUTPUT_CSV
             tabula.convert_into(self.file_path, output_file, output_format="csv", pages=pages)
             df = read_csv(output_file, names=header, delimiter=',')
 

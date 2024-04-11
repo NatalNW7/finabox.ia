@@ -1,18 +1,19 @@
-from utils import temp_path
 from os.path import join
-from os import remove
+from json import loads
+from utils import PathConstants
 
 
-OUTPUT = join(temp_path(), "output.txt")
-
-def writer(content, output: str = OUTPUT):
+def writer(content, output: str = PathConstants.OUTPUT_TXT):
     with open(output, 'w') as file:
         characters_written = file.write(content)
     
     return True if characters_written > 0 else False
 
-def reader(file: str = OUTPUT):
+def reader(file: str = PathConstants.OUTPUT_TXT):
     with open(file, 'r') as content:
+        if '.json' in file:
+            return loads(content.read())
+        
         lines = content.readlines()
     
     if not writer('content was deleted'):

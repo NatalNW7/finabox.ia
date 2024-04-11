@@ -6,20 +6,13 @@ from models.bill_reader import bill_reader
 import pandas as pd
 
 
-RESOURCES = os.path.join(os.getcwd(), 'resources') 
-
-def read_json(file_path) -> dict:
-    with open(file_path) as file:
-        content = json.loads(file.read())
-    
-    return content
 
 def carrega_categorias():
-    categorias = sort_dict(read_json(os.path.join(RESOURCES, 'categorias.json')))
+    categorias = os.path.join(RESOURCES, 'categorias.json')
     return categorias
 
 def carrega_estabelecimentos():
-    estabelecimentos = sort_dict(read_json(os.path.join(RESOURCES, 'estabelecimentos.json')))
+    estabelecimentos = os.path.join(RESOURCES, 'estabelecimentos.json')
     return estabelecimentos
 
 def set_estabelecimento(fatura: pd.DataFrame) -> pd.DataFrame:
@@ -68,9 +61,6 @@ def set_categoria(fatura: pd.DataFrame) -> pd.DataFrame:
                 break
     
     return pd.concat(dataframes, ignore_index=True, sort=True)
-
-def sort_dict(obj: dict) -> dict:
-    return {key: obj[key] for key in sorted(obj)}
 
 def clean_movimentacao(movimentacao: str):
     regex = r'(parcela\s\d+\sde\s\d+)|(parcela\s\d+\W\d+)|(\-\s\d+\W\d+)'
