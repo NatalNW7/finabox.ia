@@ -2,11 +2,13 @@ from models import Pdf
 import pytest
 from pandas import DataFrame
 from utils import PathConstants
+from os.path import join
 from utils.file import reader
 
 @pytest.fixture
 def pdf():
-    pdf = Pdf('Nubank_2023-07-23.pdf')
+    pdf_path = join(PathConstants.TEMP, 'Nubank_2023-07-23.pdf')
+    pdf = Pdf(pdf_path)
     return pdf
 
 @pytest.fixture

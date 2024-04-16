@@ -1,10 +1,13 @@
 from models.banks import InterBill
 import pytest
+from utils import PathConstants
+from os.path import join
 
 @pytest.fixture
 def bank():
+    pdf_path = join(PathConstants.TEMP, 'inter_2023-07.pdf')
     bank = InterBill()
-    bank.load_pdf('inter_2023-07.pdf')
+    bank.load_pdf(pdf_path)
     return bank
 
 def test_extract_text_from_pdf(bank):

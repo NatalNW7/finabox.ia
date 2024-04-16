@@ -1,10 +1,13 @@
 from models.banks import NubankBill
 import pytest
+from utils import PathConstants
+from os.path import join
 
 @pytest.fixture
 def bank():
+    pdf_path = join(PathConstants.TEMP, 'Nubank_2023-07-23.pdf')
     bank = NubankBill()
-    bank.load_pdf('Nubank_2023-07-23.pdf')
+    bank.load_pdf(pdf_path)
     return bank
 
 def test_raise_error_if_file_is_not_pdf(bank):
