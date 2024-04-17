@@ -1,46 +1,64 @@
 import pandas as pd
 import json
+from utils import PathConstants, file
+import os
 
 
-def read_descricao(descricao: str) -> dict:
-    descricao = descricao.strip().split('-')
-    return {
-        'Nome': descricao[1].strip(),
-        'Categoria': descricao[0].strip()
-    }
+# 'NU_579750386_01JUL2023_31JUL2023.csv'
+class ExtractReader:
+    def __init__(self, csv_file: str) -> None:
+        self.__extract_csv = os.path.join(PathConstants.TEMP, csv_file)
+        self.extract_df = self.__read_csv(self.__extract_csv)
+    
+    def __read_csv(self, extract_csv) -> pd.DataFrame:
+        lines = file.reader(extract_csv)
+        
+        for line in lines:
+            if self.__is_header(line):
+                break
+            lines.remove(line)
 
-def json_dumps(json_dict: dict) -> str:
-    return json.dumps(json_dict, indent=4, ensure_ascii=False).encode('utf8').decode()
+        return pd.DataFrame(lines)
 
-extrato_csv = 'NU_579750386_01JUL2023_31JUL2023.csv'
-df = pd.read_csv(extrato_csv, delimiter=',')
-df = df[['Data', 'Valor', 'Descrição']]
-json_arr = []
+    def __is_header(self, text: str):
+        headers = [
+            'Data,Valor,Identificador,Descrição',
+            'Data Lançamento;Histórico;Descrição;Valor;Saldo'
+        ]
 
-print(df.head())
+        return text.strip() in headers
 
-datas = json.loads(df.to_json(orient='records'))
+    def __change_columns(self):
+        self.extract_df.columns = ['DATE', 'PRICE', 'UUID', 'DESCRIPTION']
 
-for data in datas:
-    json_obj = {
-        'Valor': 0,
-        'Data': '',
-        'Banco': 'Nubank',
-    }
+    def read_description(self, description) -> dict:
+        description = description.strip().split('-')
+        return {
+            'NAME': description[1].strip(),
+            'DESCRIPTION': description[0].strip()
+        }
 
-    if 'Pagamento de fatura' in data['Descrição']:
-        continue
-    json_obj['Valor'] = data['Valor']
-    json_obj['Data'] = data['Data']
+    def parser_dataframe(self):
+        extract_lines = []
+        extract_json = json.loads(self.extract_df.to_json(orient='records'))
 
-    read_descricao(data['Descrição'])
-    json_obj.update(read_descricao(data['Descrição']))
+        for data in extract_json:
+            line = {
+                'PRICE': 0,
+                'DATE': '',
+                'BANK': 'Nubank',
+            }
 
-    print(json_obj)
-    json_arr.append(json_obj)
+            if 'Pagamento de fatura' in data['DESCRIPTION']:
+                continue
 
+            line['PRICE'] = data['PRICE']
+            line['DATE'] = data['DATE']
 
-print(json_dumps(json_arr))
+            line.update(self.read_description(data['DESCRIPTION']))
 
-# TODO resolver problema  Transfer\u00eancia para Transferência 
+            extract_lines.append(line)
+        
+        self.extract_df = pd.DataFrame(extract_lines)
+
 # TODO ler extrato dos outros bancos
