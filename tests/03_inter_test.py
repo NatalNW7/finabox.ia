@@ -12,7 +12,7 @@ def bank():
 
 @pytest.fixture
 def extract():
-    csv_file_path = join(PathConstants.TEMP, 'Extrato-01-07-2023-a-31-07-2023.csv')
+    csv_file_path = 'Extrato-01-07-2023-a-31-07-2023.csv'
     extract = InterExtractReader()
     extract.load_csv(csv_file_path)
 

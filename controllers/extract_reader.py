@@ -15,8 +15,8 @@ class ExtractReader:
         self.__BANKS: dict[str, ExtractReaderinterface] = {
             'nubank': nubank.NubankExtractReader(),
             'inter': inter.InterExtractReader(),
-            'pan': pan.PanExtractReader(),
-            'meliuz': meliuz.MeliuzExtractReader()
+            # 'pan': pan.PanExtractReader(),
+            # 'meliuz': meliuz.MeliuzExtractReader()
         }
 
         self.__extracts = []

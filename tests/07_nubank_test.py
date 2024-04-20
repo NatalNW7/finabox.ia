@@ -13,7 +13,7 @@ def bank():
 
 @pytest.fixture
 def extract():
-    csv_file_path = join(PathConstants.TEMP, 'NU_579750386_01JUL2023_31JUL2023.csv')
+    csv_file_path = 'NU_579750386_01JUL2023_31JUL2023.csv'
     extract = NubankExtractReader()
     extract.load_csv(csv_file_path)
 
