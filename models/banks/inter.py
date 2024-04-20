@@ -1,19 +1,16 @@
 
 
-from pandas import DataFrame
-from utils import BillUtils
+from pandas import DataFrame, read_csv
+from utils import BillUtils, file, PathConstants
 from re import sub, search
-from interfaces import BillInterface
-from utils.file import writer, reader
+from interfaces import BillInterface, ExtractReaderinterface
 
 class InterBill(BillInterface):
     def _extract_text(self) -> list[str]:
         text = self.pdf.pages[1].extract_text()
 
-        if writer(text):
-            lines = reader()
-        else:
-            raise Exception("Error to write content")
+        file.writer(text, PathConstants.OUTPUT_TXT)
+        lines = file.reader(PathConstants.OUTPUT_TXT)
        
         return lines
  
@@ -34,3 +31,25 @@ class InterBill(BillInterface):
                 })
 
         return DataFrame(dict_fatura)
+    
+
+class InterExtractReader(ExtractReaderinterface):
+    def _read_csv(self, csv_file: str) -> DataFrame:
+        lines = file.reader(csv_file, delete_after_read=False)
+
+        for line in lines:
+            if self.__is_header(line):
+                header_index = lines.index(line)
+                break
+        
+        extract_lines = lines[header_index:]
+        file.writer(extract_lines, csv_file)
+        return read_csv(csv_file, sep=';')
+
+    def __is_header(self, line: str):
+        return line.strip() == 'Data Lançamento;Histórico;Descrição;Valor;Saldo'
+
+    def read_extract(self) -> DataFrame:
+        self._change_columns(['DATE', 'DESCRIPTION', 'NAME', 'PRICE', 'SALDO'])
+
+        return self._extract_df.drop(columns=['SALDO'])
