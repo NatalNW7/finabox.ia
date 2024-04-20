@@ -1,4 +1,4 @@
-from models.banks import MeliuzBill
+from models.banks.meliuz import MeliuzBill
 import pytest
 from utils import PathConstants
 from os.path import join

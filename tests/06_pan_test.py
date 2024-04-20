@@ -1,11 +1,11 @@
-from models.banks import PanBill
+from models.banks.pan import PanBill
 import pytest
 from utils import PathConstants
 from os.path import join
 
 @pytest.fixture
 def bank():
-    pdf_path = join(PathConstants.TEMP, 'pan_2023-07.pdf')
+    pdf_path = 'pan_2023-07.pdf'
     bank = PanBill()
     bank.load_pdf(pdf_path)
     return bank

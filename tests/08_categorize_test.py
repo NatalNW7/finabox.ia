@@ -1,16 +1,13 @@
-from models import Categorize
-from models import BillReader
+from controllers import Categorize, BillReader
 import pytest
-from utils import PathConstants
-from os.path import join
 
 @pytest.fixture
 def categorize():
     pdfs = {
-        'nubank': join(PathConstants.TEMP, 'Nubank_2023-07-23.pdf'),
-        'inter': join(PathConstants.TEMP, 'inter_2023-07.pdf'),
-        'pan': join(PathConstants.TEMP, 'pan_2023-07.pdf'),
-        'meliuz': join(PathConstants.TEMP, 'meliuz-2023-07.pdf'),
+        'nubank': 'Nubank_2023-07-23.pdf',
+        'inter': 'inter_2023-07.pdf',
+        'pan': 'pan_2023-07.pdf',
+        'meliuz': 'meliuz-2023-07.pdf',
     }
 
     bill_reader = BillReader(pdfs)

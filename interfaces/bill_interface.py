@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from models import Pdf
 from pandas import DataFrame
+from os.path import join
+from utils import PathConstants
 
 
 class BillInterface(ABC):
@@ -8,10 +10,10 @@ class BillInterface(ABC):
         super().__init__()
         self.pdf = None
 
-    def load_pdf(self, file_path: str):
-        if not '.pdf' in file_path:
+    def load_pdf(self, file: str):
+        if not '.pdf' in file:
             raise FileExistsError('This file is not a pdf')
-        self.pdf = Pdf(file_path)
+        self.pdf = Pdf(join(PathConstants.TEMP, file))
 
     @abstractmethod
     def read_bill(self) -> DataFrame: ...
