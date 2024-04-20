@@ -51,5 +51,7 @@ class InterExtractReader(ExtractReaderinterface):
 
     def read_extract(self) -> DataFrame:
         self._change_columns(['DATE', 'DESCRIPTION', 'NAME', 'PRICE', 'SALDO'])
-
-        return self._extract_df.drop(columns=['SALDO'])
+        self._extract_df.drop(columns=['SALDO'], inplace=True)
+        self._extract_df['BANK'] = 'Inter'
+        
+        return self._extract_df
