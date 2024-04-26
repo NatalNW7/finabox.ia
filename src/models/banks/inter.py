@@ -5,7 +5,7 @@ from utils import BillUtils, file, PathConstants
 from re import sub, search
 from interfaces import BillInterface, ExtractReaderinterface
 
-class InterBill(BillInterface):
+class InterCreditCardBillReader(BillInterface):
     def _extract_text(self) -> list[str]:
         text = self.pdf.pages[1].extract_text()
 

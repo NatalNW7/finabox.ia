@@ -5,7 +5,7 @@ from os.path import join
 from utils import PathConstants
 
 
-class BillInterface(ABC):
+class CreditCardBillReader(ABC):
     def __init__(self) -> None:
         super().__init__()
         self.pdf = None

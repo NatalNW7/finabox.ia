@@ -2,7 +2,7 @@ from interfaces import BillInterface, ExtractReaderinterface
 from pandas import read_csv, DataFrame
 from json import loads
 
-class NubankBill(BillInterface):
+class NubankCreditCardBillReader(BillInterface):
     def read_bill(self):
         header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
         pages = f'4-{self.pdf.total_pages}'

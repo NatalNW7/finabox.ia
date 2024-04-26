@@ -1,4 +1,4 @@
-from os import path, getcwd, mkdir
+from os import path, getcwd
 from enum import StrEnum
 
 

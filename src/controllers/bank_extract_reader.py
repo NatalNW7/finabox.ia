@@ -9,7 +9,7 @@ from models.banks import (
     pan
 )
 
-class ExtractReader:
+class BankExtractReader:
     def __init__(self, csv_files: dict[str, str]) -> None:
         self.__files = csv_files
         self.__BANKS: dict[str, ExtractReaderinterface] = {

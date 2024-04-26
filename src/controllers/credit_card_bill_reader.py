@@ -8,7 +8,7 @@ from models.banks import (
     pan
 )
 
-class BillReader:
+class CreditCardBillReader:
     def __init__(self, pdf_files: dict[str, str], default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
         self.__files = pdf_files
         self.__default_tesseract_cmd = default_tesseract_cmd

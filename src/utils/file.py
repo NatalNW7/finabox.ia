@@ -1,5 +1,4 @@
 from json import loads, dumps
-from utils import PathConstants
 
 
 def writer(content, file_path: str):

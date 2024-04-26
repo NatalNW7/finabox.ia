@@ -3,7 +3,7 @@ from os.path import join
 from utils import PathConstants
 from pandas import DataFrame
 
-class ExtractReaderinterface(ABC):
+class BankExtractReader(ABC):
     def __init__(self) -> None:
         self._extract_df = None
 
