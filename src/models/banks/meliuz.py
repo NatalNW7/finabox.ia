@@ -1,7 +1,7 @@
-from interfaces import BillInterface
+from interfaces import CreditCardBillReader, Bank
 
 
-class MeliuzBill(BillInterface):
+class MeliuzCreditCardBillReader(CreditCardBillReader):
     def read_bill(self):
         pages = f'3-{self.pdf.total_pages}'
         df = self.pdf.to_dataframe(pages=pages)
@@ -14,3 +14,8 @@ class MeliuzBill(BillInterface):
         df['PAYMENT_TYPE'] = 'Credit'
         
         return df
+    
+class Meliuz(Bank):
+    def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
+        super().__init__(pdf_file, csv_file)
+        self._bill_reader = MeliuzCreditCardBillReader()

@@ -1,8 +1,13 @@
-from interfaces import BillInterface, ExtractReaderinterface
+from interfaces import (
+    CreditCardBillReader, 
+    BankExtractReader,
+    Bank
+)
 from pandas import read_csv, DataFrame
 from json import loads
 
-class NubankCreditCardBillReader(BillInterface):
+
+class NubankCreditCardBillReader(CreditCardBillReader):
     def read_bill(self):
         header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
         pages = f'4-{self.pdf.total_pages}'
@@ -14,8 +19,7 @@ class NubankCreditCardBillReader(BillInterface):
 
         return bill
     
-
-class NubankExtractReader(ExtractReaderinterface):
+class NubankExtractReader(BankExtractReader):
     def _read_csv(self, file_path) -> DataFrame:
         return read_csv(file_path)
     
@@ -54,3 +58,9 @@ class NubankExtractReader(ExtractReaderinterface):
             extract_lines.append(line)
         
         self._extract_df = DataFrame(extract_lines)
+
+class Nubank(Bank):
+    def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
+        super().__init__(pdf_file, csv_file)
+        self._bill_reader = NubankCreditCardBillReader()
+        self._extract_reader = NubankExtractReader()

@@ -1,23 +1,15 @@
 from pandas import DataFrame, concat
-from utils import BillUtils
-from interfaces import BillInterface
-from models.banks import (
-    nubank,
-    inter,
-    meliuz,
-    pan
+from utils import (
+    convert_date_format,
+    generate_uuid,
+    to_float
 )
+from models import BankInstance
 
 class CreditCardBillReader:
     def __init__(self, pdf_files: dict[str, str], default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
         self.__files = pdf_files
         self.__default_tesseract_cmd = default_tesseract_cmd
-        self.__BANKS: dict[str, BillInterface] = {
-            'nubank': nubank.NubankBill(),
-            'inter': inter.InterBill(),
-            'pan': pan.PanBill(default_tesseract_cmd=self.__default_tesseract_cmd),
-            'meliuz': meliuz.MeliuzBill()
-        }
         self.__bills = []
         self.__bills_reader()
 
@@ -33,16 +25,17 @@ class CreditCardBillReader:
 
     def __bills_reader(self):
         for bank, file in self.__files.items():
-            bank_bill = self.__BANKS[bank.lower()]
-            bank_bill.load_pdf(file)
-            self.__bills.append(bank_bill.read_bill())
+            bank = BankInstance(bank.upper()).get_instance()
+            bank.set_pdf(file)
+            bill = bank.read_credit_card_bill()
+            self.__bills.append(bill)
 
     def __parsed_bill(self):
         bill = concat(self.__bills, ignore_index=True)
-        bill['DATE'] = bill['DATE'].apply(BillUtils.convert_date_format, year='2023')
-        bill['PRICE'] = bill['PRICE'].apply(BillUtils.to_float)
+        bill['DATE'] = bill['DATE'].apply(convert_date_format, year='2023')
+        bill['PRICE'] = bill['PRICE'].apply(to_float)
         bill['UUID'] = 'UUID'
-        bill['UUID'] = bill['UUID'].apply(BillUtils.generate_uuid)
+        bill['UUID'] = bill['UUID'].apply(generate_uuid)
 
         return bill
     

@@ -1,4 +1,4 @@
-from controllers import Categorize, BillReader
+from controllers import Categorize, CreditCardBillReader
 import pytest
 
 @pytest.fixture
@@ -10,7 +10,7 @@ def categorize():
         'meliuz': 'meliuz-2023-07.pdf',
     }
 
-    bill_reader = BillReader(pdfs)
+    bill_reader = CreditCardBillReader(pdfs)
     categorize = Categorize(bill_reader.bill)
 
     return categorize

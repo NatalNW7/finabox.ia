@@ -1,3 +1,3 @@
-from .bill_reader import BillReader
-from .extract_reader import ExtractReader
+from .credit_card_bill_reader import CreditCardBillReader
+from .bank_extract_reader import BankExtractReader
 from .categorize import Categorize

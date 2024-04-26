@@ -1,4 +1,7 @@
-from utils import BillUtils
+from utils import (
+    convert_date_format,
+    to_float
+)
 from pytest import mark
 
 
@@ -17,7 +20,7 @@ from pytest import mark
     ]
 )
 def test_convert_date_format(input, output):
-    assert BillUtils.convert_date_format(input, year='2023') == output
+    assert convert_date_format(input, year='2023') == output
 
 @mark.parametrize(
     'input,output',
@@ -31,5 +34,5 @@ def test_convert_date_format(input, output):
     ]
 )
 def test_to_float(input, output):
-    assert BillUtils.to_float(input) == output
+    assert to_float(input) == output
 

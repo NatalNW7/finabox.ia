@@ -1,6 +1,4 @@
-from controllers import BillReader
-from utils import PathConstants
-from os.path import join
+from controllers import CreditCardBillReader
 
 
 def test_bill_reader():
@@ -11,5 +9,5 @@ def test_bill_reader():
         'meliuz': 'meliuz-2023-07.pdf',
     }
 
-    bill_reader = BillReader(pdfs)
+    bill_reader = CreditCardBillReader(pdfs)
     assert not bill_reader.bill.empty

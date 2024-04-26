@@ -1,11 +1,12 @@
 
 
 from pandas import DataFrame, read_csv
-from utils import BillUtils, file, PathConstants
+from utils import convert_date_format, file, PathConstants
 from re import sub, search
-from interfaces import BillInterface, ExtractReaderinterface
+from interfaces import CreditCardBillReader, BankExtractReader, Bank
 
-class InterCreditCardBillReader(BillInterface):
+
+class InterCreditCardBillReader(CreditCardBillReader):
     def _extract_text(self) -> list[str]:
         text = self.pdf.pages[1].extract_text()
 
@@ -23,7 +24,7 @@ class InterCreditCardBillReader(BillInterface):
             extracted = search(r'^(\d{2}\s\w{3}\s\d{4})(.+)(R\$\s\d.\d{1,},\d{2}|R\$\s\d{1,},\d{2})$', cleaned_line)
             if extracted:
                 dict_fatura.append({
-                    'DATE': BillUtils.convert_date_format(extracted.group(1).strip()),
+                    'DATE': convert_date_format(extracted.group(1).strip()),
                     'TRANSACTION': extracted.group(2).strip(),
                     'PRICE': extracted.group(3).strip().replace('R$ ', ''),
                     'BANK': 'Inter',
@@ -33,7 +34,7 @@ class InterCreditCardBillReader(BillInterface):
         return DataFrame(dict_fatura)
     
 
-class InterExtractReader(ExtractReaderinterface):
+class InterExtractReader(BankExtractReader):
     def _read_csv(self, csv_file: str) -> DataFrame:
         lines = file.reader(csv_file, delete_after_read=False)
 
@@ -55,3 +56,11 @@ class InterExtractReader(ExtractReaderinterface):
         self._extract_df['BANK'] = 'Inter'
         
         return self._extract_df
+
+
+class Inter(Bank):
+    def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
+        super().__init__(pdf_file, csv_file)
+        self._bill_reader = InterCreditCardBillReader()
+        self._extract_reader = InterExtractReader()
+    
