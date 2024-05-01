@@ -24,23 +24,24 @@ class Categorize:
         transactions.sort()
 
         for transaction in transactions:
-            transaction = str(transaction).lower().replace('*', '\*')
+            transaction = str(transaction).lower().replace('*', r'\*')
 
             if self.__is_bill_payment(transaction):
                 continue
 
             df = self.__bill[self.__bill['TRANSACTION'].str.contains(transaction, flags=re.IGNORECASE, regex=True)]
+            df.insert(0, "ESTABLISHMENT", None)
             has_establishments = False
 
             for key, values in self.establishments.items():
                 if transaction in values:
-                    df['ESTABLISHMENT'] = key
+                    df.loc[:, 'ESTABLISHMENT'] = key
                     dataframes.append(df)
                     has_establishments = True
                     break
                         
             if not has_establishments:
-                df['ESTABLISHMENT'] = 'Sem Estabelecimento'
+                df.loc[:, 'ESTABLISHMENT'] = 'Sem Estabelecimento'
                 dataframes.append(df)
 
 
@@ -58,7 +59,8 @@ class Categorize:
             for key, values in self.categories.items():
                 if estabelecimento in values:
                     df = self.__bill[self.__bill['ESTABLISHMENT'] == estabelecimento]
-                    df['CATEGORY'] = key
+                    df.insert(0, "CATEGORY", None)
+                    df.loc[:, 'CATEGORY'] = key
                     dataframes.append(df)
                     break
         
@@ -68,7 +70,7 @@ class Categorize:
     
     def clean_bill(self, inplace=False):
         self.__bill = self.__bill.drop_duplicates(subset=['UUID'])
-        self.__bill = self.__bill[~self.__bill['TRANSACTION'].str.contains('\+')]
+        self.__bill = self.__bill[~self.__bill['TRANSACTION'].str.contains(r'\+')]
         
         return self.__bill.reset_index(drop=True, inplace=inplace)
     

@@ -28,7 +28,7 @@ def test_set_categories(categorize):
 
 def test_if_bill_is_categorized(categorize):
     categorized_bill = categorize.categorized_bill
-
+    print(categorized_bill.head())
     assert check_columns_exists(['ESTABLISHMENT', 'CATEGORY'], categorized_bill.columns)
 
 def check_columns_exists(columns_to_check, df_columns):
