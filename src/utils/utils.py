@@ -16,7 +16,7 @@ def convert_date_format(data_str: str, year: str = None) -> str:
     return data_str.replace(" ","/")
 
 def to_float(num: str) -> float:
-    num = num.replace('.', '').replace(',', '.')
+    num = num.replace('.', '').replace(',', '.').replace('R$', '').strip()
     return float(num)
 
 def generate_uuid(arg) -> str:
