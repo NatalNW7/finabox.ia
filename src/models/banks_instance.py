@@ -1,10 +1,6 @@
 from interfaces import Bank
-from models.banks import (
-    Nubank,
-    Inter,
-    Pan,
-    Meliuz
-)
+from models.banks import Inter, Meliuz, Nubank, Pan
+
 
 class BankInstance:
     def __init__(self, bank_name: str) -> None:

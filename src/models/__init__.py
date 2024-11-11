@@ -1,2 +1,2 @@
-from .pdf import Pdf
-from .banks_instance import BankInstance
+from .banks_instance import BankInstance as BankInstance
+from .pdf import Pdf as Pdf

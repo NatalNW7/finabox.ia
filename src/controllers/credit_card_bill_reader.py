@@ -1,13 +1,15 @@
 from pandas import DataFrame, concat
-from utils import (
-    convert_date_format,
-    generate_uuid,
-    to_float
-)
+
 from models import BankInstance
+from utils import convert_date_format, generate_uuid, to_float
+
 
 class CreditCardBillReader:
-    def __init__(self, pdf_files: dict[str, str], default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
+    def __init__(
+        self,
+        pdf_files: dict[str, str],
+        default_tesseract_cmd=r'/usr/bin/tesseract',
+    ) -> None:
         self.__files = pdf_files
         self.__default_tesseract_cmd = default_tesseract_cmd
         self.__bills = []
@@ -38,4 +40,3 @@ class CreditCardBillReader:
         bill['UUID'] = bill['UUID'].apply(generate_uuid)
 
         return bill
-    

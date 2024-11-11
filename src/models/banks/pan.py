@@ -1,10 +1,12 @@
-from pytesseract import pytesseract
-from pdf2image import convert_from_path
-from interfaces import CreditCardBillReader, Bank
 from re import search, sub
-from utils import PathConstants, convert_date_format
+
 from pandas import DataFrame
-from utils.file import writer, reader
+from pdf2image import convert_from_path
+from pytesseract import pytesseract
+
+from interfaces import Bank, CreditCardBillReader
+from utils import PathConstants, convert_date_format
+from utils.file import reader, writer
 
 
 class PanCreditCardBillReader(CreditCardBillReader):
@@ -22,7 +24,7 @@ class PanCreditCardBillReader(CreditCardBillReader):
                 image_content = pytesseract.image_to_string(image)
                 writer(image_content, PathConstants.OUTPUT_TXT)
                 break
-        
+
         return reader(PathConstants.OUTPUT_TXT)
 
     def read_bill(self):
@@ -32,14 +34,21 @@ class PanCreditCardBillReader(CreditCardBillReader):
         for line in text:
             line = line.strip()
             if line:
-                extracted = search(r'^(\d{0,}\/\d{0,})(.+)(RS\d{0,},\d{0,}|RS\s\d{0,},\d{0,}|R\$\d{0,},\d{0,}|R\$\s\d{0,},\d{0,})$', line)
+                extracted = search(
+                    r'^(\d{0,}\/\d{0,})(.+)(RS\d{0,},\d{0,}|RS\s\d{0,},\d{0,}|R\$\d{0,},\d{0,}|R\$\s\d{0,},\d{0,})$',
+                    line,
+                )
                 if extracted:
                     dict_fatura.append({
-                        'DATE': convert_date_format(extracted.group(1).strip(), "2023"),
+                        'DATE': convert_date_format(
+                            extracted.group(1).strip(), '2023'
+                        ),
                         'TRANSACTION': extracted.group(2).strip(),
-                        'PRICE': sub(r'RS|R$|RS |R$ ', '', extracted.group(3).strip()),
+                        'PRICE': sub(
+                            r'RS|R$|RS |R$ ', '', extracted.group(3).strip()
+                        ),
                         'BANK': 'Pan',
-                        'PAYMENT_TYPE': 'Credit'
+                        'PAYMENT_TYPE': 'Credit',
                     })
 
         return DataFrame(dict_fatura)

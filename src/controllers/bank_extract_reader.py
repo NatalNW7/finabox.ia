@@ -1,5 +1,7 @@
 from pandas import concat
+
 from models import BankInstance
+
 
 class BankExtractReader:
     def __init__(self, csv_files: dict[str, str]) -> None:
@@ -11,7 +13,7 @@ class BankExtractReader:
     def extract(self):
         "Return extract of all banks in a single dataframe"
         return concat(self.__extracts, ignore_index=True)
-    
+
     @property
     def extracts(self):
         "Return list of each bank extract"

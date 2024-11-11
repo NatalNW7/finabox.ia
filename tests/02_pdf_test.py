@@ -1,9 +1,12 @@
-from models import Pdf
+from os.path import join
+
 import pytest
 from pandas import DataFrame
+
+from models import Pdf
 from utils import PathConstants
-from os.path import join
 from utils.file import reader
+
 
 @pytest.fixture
 def pdf():
@@ -11,16 +14,21 @@ def pdf():
     pdf = Pdf(pdf_path)
     return pdf
 
+
 @pytest.fixture
 def pages(pdf):
     return f'4-{pdf.total_pages}'
+
 
 def test_convert_pdf_to_dataframe(pdf, pages):
     df = pdf.to_dataframe(pages)
 
     assert isinstance(df, DataFrame)
 
-def test_check_if_csv_content_was_deleted_after_convert_pdf_to_dataframe(pdf, pages):
+
+def test_check_if_csv_content_was_deleted_after_convert_pdf_to_dataframe(
+    pdf, pages
+):
     df = pdf.to_dataframe(pages)
 
     assert reader(PathConstants.OUTPUT_CSV) == ['content was deleted']

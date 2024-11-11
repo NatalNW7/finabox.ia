@@ -1,8 +1,10 @@
-from pandas import DataFrame, read_csv
 import tabula
+from pandas import DataFrame, read_csv
 from pypdf import PdfReader
+
 from utils import PathConstants
 from utils.file import deleter
+
 
 class Pdf(PdfReader):
     def __init__(self, file_path) -> None:
@@ -18,7 +20,9 @@ class Pdf(PdfReader):
 
         if len(dfs) > 1:
             output_file = PathConstants.OUTPUT_CSV
-            tabula.convert_into(self.file_path, output_file, output_format="csv", pages=pages)
+            tabula.convert_into(
+                self.file_path, output_file, output_format='csv', pages=pages
+            )
             df = read_csv(output_file, names=header, delimiter=',')
 
             deleter(file=output_file)

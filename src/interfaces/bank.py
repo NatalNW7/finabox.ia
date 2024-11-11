@@ -1,12 +1,15 @@
-from pandas import DataFrame
 from abc import ABC
-from interfaces import CreditCardBillReader, BankExtractReader
+
+from pandas import DataFrame
+
+from interfaces import BankExtractReader, CreditCardBillReader
+
 
 class Bank(ABC):
     def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
         self._pdf_file = pdf_file
         self._csv_file = csv_file
-        self._bill_reader: CreditCardBillReader =  None
+        self._bill_reader: CreditCardBillReader = None
         self._extract_reader: BankExtractReader = None
 
     def set_pdf(self, pdf_file: str):

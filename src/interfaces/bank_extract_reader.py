@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from os.path import join
-from utils import PathConstants
+
 from pandas import DataFrame
+
+from utils import PathConstants
+
 
 class BankExtractReader(ABC):
     def __init__(self) -> None:

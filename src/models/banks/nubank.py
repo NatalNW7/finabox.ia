@@ -1,15 +1,13 @@
-from interfaces import (
-    CreditCardBillReader, 
-    BankExtractReader,
-    Bank
-)
-from pandas import read_csv, DataFrame
 from json import loads
+
+from pandas import DataFrame, read_csv
+
+from interfaces import Bank, BankExtractReader, CreditCardBillReader
 
 
 class NubankCreditCardBillReader(CreditCardBillReader):
     def read_bill(self):
-        header=['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
+        header = ['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
         pages = f'4-{self.pdf.total_pages}'
         bill = self.pdf.to_dataframe(pages, header)
         bill.drop(columns=['Unnamed'], inplace=True)
@@ -18,11 +16,12 @@ class NubankCreditCardBillReader(CreditCardBillReader):
         bill['PAYMENT_TYPE'] = 'Credit'
 
         return bill
-    
+
+
 class NubankExtractReader(BankExtractReader):
     def _read_csv(self, file_path) -> DataFrame:
         return read_csv(file_path)
-    
+
     def read_extract(self):
         self._change_columns(['DATE', 'PRICE', 'UUID', 'DESCRIPTION'])
         self.__serialize_dataframe()
@@ -33,7 +32,7 @@ class NubankExtractReader(BankExtractReader):
         description = description.strip().split('-')
         return {
             'NAME': description[1].strip(),
-            'DESCRIPTION': description[0].strip()
+            'DESCRIPTION': description[0].strip(),
         }
 
     def __serialize_dataframe(self):
@@ -56,8 +55,9 @@ class NubankExtractReader(BankExtractReader):
             line.update(self.__read_description(data['DESCRIPTION']))
 
             extract_lines.append(line)
-        
+
         self._extract_df = DataFrame(extract_lines)
+
 
 class Nubank(Bank):
     def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:

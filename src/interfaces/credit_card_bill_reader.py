@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
-from models import Pdf
-from pandas import DataFrame
 from os.path import join
+
+from pandas import DataFrame
+
+from models import Pdf
 from utils import PathConstants
 
 
@@ -11,7 +13,7 @@ class CreditCardBillReader(ABC):
         self.pdf = None
 
     def load_pdf(self, file: str):
-        if not '.pdf' in file:
+        if '.pdf' not in file:
             raise FileExistsError('This file is not a pdf')
         self.pdf = Pdf(join(PathConstants.TEMP, file))
 

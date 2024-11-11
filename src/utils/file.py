@@ -1,4 +1,4 @@
-from json import loads, dumps
+from json import dumps, loads
 
 
 def writer(content, file_path: str):
@@ -10,17 +10,19 @@ def writer(content, file_path: str):
         else:
             file.write(content)
 
-def reader(file: str, delete_after_read: bool = True) -> (dict | list[str]):
+
+def reader(file: str, delete_after_read: bool = True) -> dict | list[str]:
     with open(file, 'r') as content:
         if '.json' in file:
             return loads(content.read())
-        
+
         lines = content.readlines()
-    
+
     if delete_after_read:
         deleter(file)
-    
+
     return lines
+
 
 def deleter(file: str):
     writer('content was deleted', file_path=file)
