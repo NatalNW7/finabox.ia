@@ -3,7 +3,7 @@ name: Lint
 on: [push]
 
 jobs:
-  pylint:
+  ruff:
     name: Ruff
     runs-on: ubuntu-latest
     strategy:
@@ -19,5 +19,5 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-      - name: Analysing the code with pylint
+      - name: Analysing the code with ruff
         run: task format
