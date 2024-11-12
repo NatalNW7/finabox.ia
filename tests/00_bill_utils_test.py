@@ -1,6 +1,6 @@
 from pytest import mark
 
-from utils import convert_date_format, to_float
+from src.utils import convert_date_format, to_float
 
 
 @mark.parametrize(

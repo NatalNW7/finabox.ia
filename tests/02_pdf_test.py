@@ -3,9 +3,8 @@ from os.path import join
 import pytest
 from pandas import DataFrame
 
-from models import Pdf
-from utils import PathConstants
-from utils.file import reader
+from src.utils import PathConstants, Pdf
+from src.utils.file import reader
 
 
 @pytest.fixture

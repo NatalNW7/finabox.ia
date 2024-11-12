@@ -1,7 +1,7 @@
 from pandas import DataFrame, concat
 
-from models import BankInstance
-from utils import convert_date_format, generate_uuid, to_float
+from src.models import BankInstance
+from src.utils import convert_date_format, generate_uuid, to_float
 
 
 class CreditCardBillReader:

@@ -2,8 +2,8 @@ from os.path import join
 
 import pytest
 
-from models.banks import Meliuz
-from utils import PathConstants
+from src.models.banks import Meliuz
+from src.utils import PathConstants
 
 
 @pytest.fixture

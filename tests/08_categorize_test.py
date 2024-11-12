@@ -1,6 +1,6 @@
 import pytest
 
-from controllers import Categorize, CreditCardBillReader
+from src.controllers import Categorize, CreditCardBillReader
 
 
 @pytest.fixture

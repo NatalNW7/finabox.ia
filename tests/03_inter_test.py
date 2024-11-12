@@ -2,8 +2,8 @@ from os.path import join
 
 import pytest
 
-from models.banks import Inter
-from utils import PathConstants
+from src.models.banks import Inter
+from src.utils import PathConstants
 
 
 @pytest.fixture

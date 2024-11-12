@@ -2,8 +2,8 @@ from os.path import exists
 
 from pytest import mark
 
-from utils import PathConstants
-from utils.file import reader, writer
+from src.utils import PathConstants
+from src.utils.file import reader, writer
 
 
 @mark.parametrize(

@@ -1,6 +1,6 @@
 from pandas import concat
 
-from models import BankInstance
+from src.models import BankInstance
 
 
 class BankExtractReader:
@@ -21,7 +21,7 @@ class BankExtractReader:
 
     def __extract_reader(self):
         for bank, file in self.__files.items():
-            bank = BankInstance(bank.upper()).get_instance()
+            bank = BankInstance(bank).get_instance()
             bank.set_csv(file)
             extract = bank.read_bank_extract()
             self.__extracts.append(extract)

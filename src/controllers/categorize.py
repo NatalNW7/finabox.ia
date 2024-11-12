@@ -2,8 +2,8 @@ import re
 
 import pandas as pd
 
-from utils import PathConstants
-from utils.file import reader
+from src.utils import PathConstants
+from src.utils.file import reader
 
 
 class Categorize:

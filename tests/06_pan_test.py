@@ -1,6 +1,6 @@
 import pytest
 
-from models.banks import Pan
+from src.models.banks import Pan
 
 
 @pytest.fixture

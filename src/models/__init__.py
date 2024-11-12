@@ -1,2 +1,1 @@
-from .banks_instance import BankInstance as BankInstance
-from .pdf import Pdf as Pdf
+from src.models.banks_instance import BankInstance as BankInstance

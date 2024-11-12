@@ -2,8 +2,8 @@ from os.path import join
 
 import pytest
 
-from models.banks.nubank import Nubank
-from utils import PathConstants
+from src.models.banks.nubank import Nubank
+from src.utils import PathConstants
 
 
 @pytest.fixture

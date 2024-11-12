@@ -1,4 +1,4 @@
-from .inter import Inter as Inter
-from .meliuz import Meliuz as Meliuz
-from .nubank import Nubank as Nubank
-from .pan import Pan as Pan
+from src.models.banks.inter import Inter as Inter
+from src.models.banks.meliuz import Meliuz as Meliuz
+from src.models.banks.nubank import Nubank as Nubank
+from src.models.banks.pan import Pan as Pan

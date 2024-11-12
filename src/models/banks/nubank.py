@@ -2,7 +2,7 @@ from json import loads
 
 from pandas import DataFrame, read_csv
 
-from interfaces import Bank, BankExtractReader, CreditCardBillReader
+from src.interfaces import Bank, BankExtractReader, CreditCardBillReader
 
 
 class NubankCreditCardBillReader(CreditCardBillReader):

@@ -2,8 +2,8 @@ from re import search, sub
 
 from pandas import DataFrame, read_csv
 
-from interfaces import Bank, BankExtractReader, CreditCardBillReader
-from utils import PathConstants, convert_date_format, file
+from src.interfaces import Bank, BankExtractReader, CreditCardBillReader
+from src.utils import PathConstants, convert_date_format, file
 
 
 class InterCreditCardBillReader(CreditCardBillReader):

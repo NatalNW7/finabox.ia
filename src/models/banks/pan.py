@@ -4,9 +4,9 @@ from pandas import DataFrame
 from pdf2image import convert_from_path
 from pytesseract import pytesseract
 
-from interfaces import Bank, CreditCardBillReader
-from utils import PathConstants, convert_date_format
-from utils.file import reader, writer
+from src.interfaces import Bank, CreditCardBillReader
+from src.utils import PathConstants, convert_date_format
+from src.utils.file import reader, writer
 
 
 class PanCreditCardBillReader(CreditCardBillReader):

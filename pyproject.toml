@@ -11,13 +11,19 @@ preview = true
 quote-style =  'single'
 
 [tool.pytest.ini_options]
-pythonpath = 'src'
+pythonpath = '.'
 addopts = '-ra -q -p no:warnings'
-testpaths = 'tests'
+python_files = [
+    "test_*.py",
+    "*_test.py",
+]
+testpaths = [
+    "tests",
+]
 
 [tool.taskipy.tasks]
 lint = 'ruff check .; ruff check . --diff'
 format = 'ruff check . --fix; ruff format .'
 pre_test = 'task lint'
-test = 'pytest -s -x --cov=todo_list -vv'
+test = 'pytest -s -x --cov=. -vv'
 post_test = 'coverage html'
