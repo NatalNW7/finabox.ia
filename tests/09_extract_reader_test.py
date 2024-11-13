@@ -1,4 +1,4 @@
-from src.controllers import BankExtractReader
+from src.services import BankExtractReader
 
 
 def test_read_nubank_extract():

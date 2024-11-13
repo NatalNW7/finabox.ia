@@ -1,4 +1,4 @@
-from src.controllers import CreditCardBillReader
+from src.services import CreditCardBillReader
 
 
 def test_bill_reader():
