@@ -2,8 +2,8 @@ import tabula
 from pandas import DataFrame, read_csv
 from pypdf import PdfReader
 
-from src.utils import PathConstants
-from src.utils.file import deleter
+from core.utils import PathConstants
+from core.utils.file import deleter
 
 
 class Pdf(PdfReader):

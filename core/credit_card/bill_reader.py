@@ -1,7 +1,7 @@
 from pandas import DataFrame, concat
 
-from src.models import BankInstance
-from src.utils import convert_date_format, generate_uuid, to_float
+from core.banks import BankFactory
+from core.utils import convert_date_format, generate_uuid, to_float
 
 
 class CreditCardBillReader:
@@ -27,7 +27,7 @@ class CreditCardBillReader:
 
     def __bills_reader(self):
         for bank, file in self.__files.items():
-            bank = BankInstance(bank.upper()).get_instance()
+            bank = BankFactory(bank.upper()).get_instance()
             bank.set_pdf(file)
             bill = bank.read_credit_card_bill()
             self.__bills.append(bill)

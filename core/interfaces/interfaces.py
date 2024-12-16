@@ -3,7 +3,7 @@ from os.path import join
 
 from pandas import DataFrame
 
-from src.utils import PathConstants, Pdf
+from core.utils import PathConstants, Pdf
 
 
 class CreditCardBillReader(ABC):
@@ -20,21 +20,21 @@ class CreditCardBillReader(ABC):
     def read_bill(self) -> DataFrame: ...
 
 
-class BankExtractReader(ABC):
+class StatementReader(ABC):
     def __init__(self) -> None:
-        self._extract_df = None
+        self._statement_df = None
 
     def load_csv(self, csv_file: str):
-        self._extract_df = self._read_csv(join(PathConstants.TEMP, csv_file))
+        self._statement_df = self._read_csv(join(PathConstants.TEMP, csv_file))
 
     @abstractmethod
-    def read_extract() -> DataFrame: ...
+    def read_statement() -> DataFrame: ...
 
     @abstractmethod
     def _read_csv(self, csv_file: str) -> DataFrame: ...
 
     def _change_columns(self, columns):
-        self._extract_df.columns = columns
+        self._statement_df.columns = columns
 
 
 class Bank(ABC):
@@ -42,7 +42,7 @@ class Bank(ABC):
         self._pdf_file = pdf_file
         self._csv_file = csv_file
         self._bill_reader: CreditCardBillReader = None
-        self._extract_reader: BankExtractReader = None
+        self._statement_reader: StatementReader = None
 
     def set_pdf(self, pdf_file: str):
         self._pdf_file = pdf_file
@@ -56,8 +56,8 @@ class Bank(ABC):
 
         return bill
 
-    def read_bank_extract(self) -> DataFrame:
-        self._extract_reader.load_csv(self._csv_file)
-        extract = self._extract_reader.read_extract()
+    def read_bank_statement(self) -> DataFrame:
+        self._statement_reader.load_csv(self._csv_file)
+        statement = self._statement_reader.read_statement()
 
-        return extract
+        return statement

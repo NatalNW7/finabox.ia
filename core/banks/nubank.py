@@ -2,7 +2,7 @@ from json import loads
 
 from pandas import DataFrame, read_csv
 
-from src.interfaces import Bank, BankExtractReader, CreditCardBillReader
+from core.interfaces import Bank, CreditCardBillReader, StatementReader
 
 
 class NubankCreditCardBillReader(CreditCardBillReader):
@@ -18,15 +18,15 @@ class NubankCreditCardBillReader(CreditCardBillReader):
         return bill
 
 
-class NubankExtractReader(BankExtractReader):
+class NubankStatementReader(StatementReader):
     def _read_csv(self, file_path) -> DataFrame:
         return read_csv(file_path)
 
-    def read_extract(self):
+    def read_statement(self):
         self._change_columns(['DATE', 'PRICE', 'UUID', 'DESCRIPTION'])
         self.__serialize_dataframe()
 
-        return self._extract_df
+        return self._statement_df
 
     def __read_description(self, description: str) -> dict:
         description = description.strip().split('-')
@@ -36,10 +36,10 @@ class NubankExtractReader(BankExtractReader):
         }
 
     def __serialize_dataframe(self):
-        extract_lines = []
-        extract_json = loads(self._extract_df.to_json(orient='records'))
+        statement_lines = []
+        statement_json = loads(self._statement_df.to_json(orient='records'))
 
-        for data in extract_json:
+        for data in statement_json:
             line = {
                 'PRICE': 0,
                 'DATE': '',
@@ -54,13 +54,13 @@ class NubankExtractReader(BankExtractReader):
 
             line.update(self.__read_description(data['DESCRIPTION']))
 
-            extract_lines.append(line)
+            statement_lines.append(line)
 
-        self._extract_df = DataFrame(extract_lines)
+        self._statement_df = DataFrame(statement_lines)
 
 
 class Nubank(Bank):
     def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
         super().__init__(pdf_file, csv_file)
         self._bill_reader = NubankCreditCardBillReader()
-        self._extract_reader = NubankExtractReader()
+        self._statement_reader = NubankStatementReader()

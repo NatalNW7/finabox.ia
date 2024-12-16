@@ -4,9 +4,9 @@ from pandas import DataFrame
 from pdf2image import convert_from_path
 from pytesseract import pytesseract
 
-from src.interfaces import Bank, CreditCardBillReader
-from src.utils import PathConstants, convert_date_format
-from src.utils.file import reader, writer
+from core.interfaces import Bank, CreditCardBillReader
+from core.utils import PathConstants, convert_date_format
+from core.utils.file import reader, writer
 
 
 class PanCreditCardBillReader(CreditCardBillReader):
@@ -14,7 +14,7 @@ class PanCreditCardBillReader(CreditCardBillReader):
         super().__init__()
         self.__default_tesseract_cmd = default_tesseract_cmd
 
-    def _extract_text(self) -> list[str]:
+    def _statement_text(self) -> list[str]:
         pytesseract.tesseract_cmd = self.__default_tesseract_cmd
         images = convert_from_path(self.pdf.file_path)
 
@@ -29,23 +29,23 @@ class PanCreditCardBillReader(CreditCardBillReader):
 
     def read_bill(self):
         dict_fatura = []
-        text = self._extract_text()
+        text = self._statement_text()
 
         for line in text:
             line = line.strip()
             if line:
-                extracted = search(
+                statemented = search(
                     r'^(\d{0,}\/\d{0,})(.+)(RS\d{0,},\d{0,}|RS\s\d{0,},\d{0,}|R\$\d{0,},\d{0,}|R\$\s\d{0,},\d{0,})$',
                     line,
                 )
-                if extracted:
+                if statemented:
                     dict_fatura.append({
                         'DATE': convert_date_format(
-                            extracted.group(1).strip(), '2023'
+                            statemented.group(1).strip(), '2023'
                         ),
-                        'TRANSACTION': extracted.group(2).strip(),
+                        'TRANSACTION': statemented.group(2).strip(),
                         'PRICE': sub(
-                            r'RS|R$|RS |R$ ', '', extracted.group(3).strip()
+                            r'RS|R$|RS |R$ ', '', statemented.group(3).strip()
                         ),
                         'BANK': 'Pan',
                         'PAYMENT_TYPE': 'Credit',

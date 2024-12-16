@@ -2,8 +2,8 @@ from re import search, sub
 
 from pandas import DataFrame, read_csv
 
-from src.interfaces import Bank, BankExtractReader, CreditCardBillReader
-from src.utils import PathConstants, convert_date_format, file
+from core.interfaces import Bank, CreditCardBillReader, StatementReader
+from core.utils import PathConstants, convert_date_format, file
 
 
 class InterCreditCardBillReader(CreditCardBillReader):
@@ -21,15 +21,15 @@ class InterCreditCardBillReader(CreditCardBillReader):
 
         for line in text:
             cleaned_line = sub(r'\xa0|\x00', ' ', line.strip())
-            extracted = search(
+            statemented = search(
                 r'^(\d{2}\s\w{3}\s\d{4})(.+)(R\$\s\d.\d{1,},\d{2}|R\$\s\d{1,},\d{2})$',
                 cleaned_line,
             )
-            if extracted:
+            if statemented:
                 dict_fatura.append({
-                    'DATE': convert_date_format(extracted.group(1).strip()),
-                    'TRANSACTION': extracted.group(2).strip(),
-                    'PRICE': extracted.group(3).strip().replace('R$ ', ''),
+                    'DATE': convert_date_format(statemented.group(1).strip()),
+                    'TRANSACTION': statemented.group(2).strip(),
+                    'PRICE': statemented.group(3).strip().replace('R$ ', ''),
                     'BANK': 'Inter',
                     'PAYMENT_TYPE': 'Credit',
                 })
@@ -37,7 +37,7 @@ class InterCreditCardBillReader(CreditCardBillReader):
         return DataFrame(dict_fatura)
 
 
-class InterExtractReader(BankExtractReader):
+class InterStatementReader(StatementReader):
     def _read_csv(self, csv_file: str) -> DataFrame:
         lines = file.reader(csv_file, delete_after_read=False)
 
@@ -46,8 +46,8 @@ class InterExtractReader(BankExtractReader):
                 header_index = lines.index(line)
                 break
 
-        extract_lines = lines[header_index:]
-        file.writer(extract_lines, csv_file)
+        statement_lines = lines[header_index:]
+        file.writer(statement_lines, csv_file)
         return read_csv(csv_file, sep=';')
 
     def __is_header(self, line: str):
@@ -55,16 +55,16 @@ class InterExtractReader(BankExtractReader):
             line.strip() == 'Data Lançamento;Histórico;Descrição;Valor;Saldo'
         )
 
-    def read_extract(self) -> DataFrame:
+    def read_statement(self) -> DataFrame:
         self._change_columns(['DATE', 'DESCRIPTION', 'NAME', 'PRICE', 'SALDO'])
-        self._extract_df.drop(columns=['SALDO'], inplace=True)
-        self._extract_df['BANK'] = 'Inter'
+        self._statement_df.drop(columns=['SALDO'], inplace=True)
+        self._statement_df['BANK'] = 'Inter'
 
-        return self._extract_df
+        return self._statement_df
 
 
 class Inter(Bank):
     def __init__(self, pdf_file: str = None, csv_file: str = None) -> None:
         super().__init__(pdf_file, csv_file)
         self._bill_reader = InterCreditCardBillReader()
-        self._extract_reader = InterExtractReader()
+        self._statement_reader = InterStatementReader()

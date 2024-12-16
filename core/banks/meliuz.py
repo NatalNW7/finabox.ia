@@ -1,4 +1,4 @@
-from src.interfaces import Bank, CreditCardBillReader
+from core.interfaces import Bank, CreditCardBillReader
 
 
 class MeliuzCreditCardBillReader(CreditCardBillReader):

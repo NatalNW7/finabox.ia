@@ -24,6 +24,6 @@ testpaths = [
 [tool.taskipy.tasks]
 lint = 'ruff check .; ruff check . --diff'
 format = 'ruff check . --fix; ruff format .'
-pre_test = 'task lint'
+pre_test = 'task lint; task format'
 test = 'pytest -s -x --cov=. -vv'
 post_test = 'coverage html'
