@@ -10,13 +10,13 @@ from core.utils import PathConstants as pc
     [
         (
             'inter',
-            join(pc.TEMP, 'inter_2023-07.pdf'),
-            join(pc.TEMP, 'Extrato-01-07-2023-a-31-07-2023.csv'),
+            join(pc.TEMP, 'cartao-inter.pdf'),
+            join(pc.TEMP, 'extrato-inter.csv'),
         ),
         (
             'nubank',
-            join(pc.TEMP, 'Nubank_2023-07-23.pdf'),
-            join(pc.TEMP, 'NU_579750386_01JUL2023_31JUL2023.csv'),
+            join(pc.TEMP, 'cartao-nubank.pdf'),
+            join(pc.TEMP, 'extrato-nubank.csv'),
         ),
     ],
     ids=lambda param: param[0],
@@ -33,22 +33,22 @@ def test_read_statement(bank):
     [
         (
             'inter',
-            join(pc.TEMP, 'inter_2023-07.pdf'),
-            join(pc.TEMP, 'Extrato-01-07-2023-a-31-07-2023.csv'),
+            join(pc.TEMP, 'cartao-inter.pdf'),
+            '',
         ),
         (
             'nubank',
-            join(pc.TEMP, 'Nubank_2023-07-23.pdf'),
-            join(pc.TEMP, 'NU_579750386_01JUL2023_31JUL2023.csv'),
+            join(pc.TEMP, 'cartao-nubank.pdf'),
+            '',
         ),
         (
             'pan',
-            join(pc.TEMP, 'pan_2023-07.pdf'),
+            join(pc.TEMP, 'cartao-pan.pdf'),
             '',
         ),
         (
             'meliuz',
-            join(pc.TEMP, 'meliuz-2023-07.pdf'),
+            join(pc.TEMP, 'cartao-meliuz.pdf'),
             '',
         ),
     ],
