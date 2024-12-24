@@ -2,6 +2,7 @@ from os.path import join
 
 import pytest
 
+from core.interfaces import Bank
 from core.utils import PathConstants as pc
 
 
@@ -22,7 +23,7 @@ from core.utils import PathConstants as pc
     ids=lambda param: param[0],
     indirect=True,
 )
-def test_read_statement(bank):
+def test_read_statement(bank: Bank):
     df = bank.read_bank_statement()
 
     assert df.empty == False
@@ -55,7 +56,9 @@ def test_read_statement(bank):
     ids=lambda param: param[0],
     indirect=True,
 )
-def test_read_credit_card_bill(bank):
+def test_read_credit_card_bill(bank: Bank):
     df = bank.read_credit_card_bill()
+
+    # df.to_csv(f'{bank.__class__.__name__}.csv', index=False)
 
     assert df.empty == False

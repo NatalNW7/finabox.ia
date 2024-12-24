@@ -23,3 +23,4 @@ def pytest_sessionfinish(session, exitstatus):
     if env != 'local':
         rmtree(pc.TEMP)
         makedirs(pc.TEMP)
+        print('Files from temp folder was deleted.')
