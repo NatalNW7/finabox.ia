@@ -1,4 +1,5 @@
 from re import search
+from shutil import which
 from uuid import uuid4
 
 
@@ -36,3 +37,7 @@ def to_float(num: str) -> float:
 
 def generate_uuid(arg) -> str:
     return str(uuid4())
+
+
+def find_tesseract_path() -> str:
+    return which('tesseract')

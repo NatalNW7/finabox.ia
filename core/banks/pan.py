@@ -5,12 +5,12 @@ from pdf2image import convert_from_path
 from pytesseract import pytesseract
 
 from core.interfaces import Bank, CreditCardBillReader
-from core.utils import PathConstants, convert_date_format
+from core.utils import PathConstants, convert_date_format, find_tesseract_path
 from core.utils.file import reader, writer
 
 
 class PanCreditCardBillReader(CreditCardBillReader):
-    def __init__(self, default_tesseract_cmd=r'/usr/bin/tesseract') -> None:
+    def __init__(self, default_tesseract_cmd=find_tesseract_path()) -> None:
         super().__init__()
         self.__default_tesseract_cmd = default_tesseract_cmd
 
