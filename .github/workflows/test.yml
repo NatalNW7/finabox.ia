@@ -21,3 +21,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Executing tests
         run: task test
+        env:
+          FILES_INFO: ${{ secrets.FILES_INFO }}
+          GDRIVE_INFO: ${{ secrets.GDRIVE_INFO }}
+          ENVIROMENT: ${{ vars.ENVIROMENT }}
