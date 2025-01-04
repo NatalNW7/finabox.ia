@@ -2,7 +2,7 @@ from json import loads
 
 from pandas import DataFrame, read_csv
 
-from core.interfaces import Bank, CreditCardBillReader, StatementReader
+from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
 
 
 class NubankCreditCardBillReader(CreditCardBillReader):

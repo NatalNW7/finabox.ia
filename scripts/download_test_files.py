@@ -58,8 +58,8 @@ def download_file(service, file_id, destination):
 
 def main():
     os.makedirs(TEMP, exist_ok=True)
-    googledrive_service = auth_on_gdrive_api()
     files = load_files_info()
+    googledrive_service = auth_on_gdrive_api()
 
     for file in files:
         file_id = file['file_id']

@@ -1,6 +1,6 @@
 from pandas import concat
 
-from core.banks import BankFactory
+from finabox.banks import BankFactory
 
 
 class StatementReader:

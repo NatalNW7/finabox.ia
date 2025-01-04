@@ -2,8 +2,8 @@ from re import search, sub
 
 from pandas import DataFrame, read_csv
 
-from core.interfaces import Bank, CreditCardBillReader, StatementReader
-from core.utils import PathConstants, convert_date_format, file
+from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
+from finabox.utils import PathConstants, convert_date_format, file
 
 
 class InterCreditCardBillReader(CreditCardBillReader):

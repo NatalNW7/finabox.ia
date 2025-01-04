@@ -1,4 +1,4 @@
-from core.interfaces import Bank, CreditCardBillReader
+from finabox.interfaces import Bank, CreditCardBillReader
 
 
 class MeliuzCreditCardBillReader(CreditCardBillReader):

@@ -2,8 +2,8 @@ from os.path import join
 
 import pytest
 
-from core.interfaces import Bank
-from core.utils import PathConstants as pc
+from finabox.interfaces import Bank
+from finabox.utils import PathConstants as pc
 
 
 @pytest.mark.parametrize(
