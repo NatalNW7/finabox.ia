@@ -3,7 +3,7 @@ from os.path import join
 
 from pandas import DataFrame
 
-from core.utils import PathConstants, Pdf
+from finabox.utils import PathConstants, Pdf
 
 
 class CreditCardBillReader(ABC):

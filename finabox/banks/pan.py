@@ -4,9 +4,13 @@ from pandas import DataFrame
 from pdf2image import convert_from_path
 from pytesseract import pytesseract
 
-from core.interfaces import Bank, CreditCardBillReader
-from core.utils import PathConstants, convert_date_format, find_tesseract_path
-from core.utils.file import reader, writer
+from finabox.interfaces import Bank, CreditCardBillReader
+from finabox.utils import (
+    PathConstants,
+    convert_date_format,
+    find_tesseract_path,
+)
+from finabox.utils.file import reader, writer
 
 
 class PanCreditCardBillReader(CreditCardBillReader):

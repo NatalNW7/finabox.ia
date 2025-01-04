@@ -3,8 +3,8 @@ from shutil import rmtree
 
 import pytest
 
-from core.banks import BankFactory
-from core.utils import PathConstants as pc
+from finabox.banks import BankFactory
+from finabox.utils import PathConstants as pc
 
 
 @pytest.fixture(scope='function')
@@ -23,4 +23,4 @@ def pytest_sessionfinish(session, exitstatus):
     if env != 'local':
         rmtree(pc.TEMP)
         makedirs(pc.TEMP)
-        print('Files from temp folder was deleted.')
+        print('\nFiles from temp folder was deleted.')

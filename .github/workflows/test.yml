@@ -1,6 +1,6 @@
 name: Test
 
-on: [push]
+on: pull_request
 
 jobs:
   pytest:
@@ -11,17 +11,16 @@ jobs:
         python-version: ["3.13"]
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+      - name: Install Python ${{ matrix.python-version }} and uv
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils tesseract-ocr libtesseract-dev
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-      - name: Executing tests
+          uv sync
+      - name: Execute ruff lint and pytest
         run: task test
         env:
           FILES_INFO: ${{ secrets.FILES_INFO }}
