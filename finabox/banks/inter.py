@@ -3,7 +3,7 @@ from re import search, sub
 from pandas import DataFrame, read_csv
 
 from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
-from finabox.utils import PathConstants, convert_date_format, file
+from finabox.utils import PathConstants, file
 
 
 class InterCreditCardBillReader(CreditCardBillReader):
@@ -27,9 +27,9 @@ class InterCreditCardBillReader(CreditCardBillReader):
             )
             if statemented:
                 dict_fatura.append({
-                    'DATE': convert_date_format(statemented.group(1).strip()),
+                    'DATE': statemented.group(1).strip(),
                     'TRANSACTION': statemented.group(2).strip(),
-                    'PRICE': statemented.group(3).strip().replace('R$ ', ''),
+                    'PRICE': statemented.group(3).strip(),
                     'BANK': 'Inter',
                     'PAYMENT_TYPE': 'Credit',
                 })

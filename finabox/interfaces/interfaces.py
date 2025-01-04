@@ -3,7 +3,7 @@ from os.path import join
 
 from pandas import DataFrame
 
-from finabox.utils import PathConstants, Pdf
+from finabox.utils import PathConstants, Pdf, convert_date_format, to_float
 
 
 class CreditCardBillReader(ABC):
@@ -17,7 +17,7 @@ class CreditCardBillReader(ABC):
         self.pdf = Pdf(join(PathConstants.TEMP, file))
 
     @abstractmethod
-    def read_bill(self, **kwargs) -> DataFrame: ...
+    def read_bill(self) -> DataFrame: ...
 
 
 class StatementReader(ABC):
@@ -52,12 +52,15 @@ class Bank(ABC):
 
     def read_credit_card_bill(self, year: str = None) -> DataFrame:
         self._bill_reader.load_pdf(self._pdf_file)
-        bill = self._bill_reader.read_bill(year=year)
+        bill = self._bill_reader.read_bill()
+        bill['DATE'] = bill['DATE'].apply(convert_date_format, year=year)
+        bill['PRICE'] = bill['PRICE'].apply(to_float)
 
         return bill
 
     def read_bank_statement(self) -> DataFrame:
         self._statement_reader.load_csv(self._csv_file)
         statement = self._statement_reader.read_statement()
+        statement['PRICE'] = statement['PRICE'].apply(to_float)
 
         return statement

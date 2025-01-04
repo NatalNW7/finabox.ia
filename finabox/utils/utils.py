@@ -31,6 +31,9 @@ def convert_date_format(data_str: str, year: str = None) -> str:
 
 
 def to_float(num: str) -> float:
+    if isinstance(num, float):
+        return num
+
     num = num.replace('.', '').replace(',', '.').replace('R$', '').strip()
     return float(num)
 

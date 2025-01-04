@@ -7,7 +7,6 @@ from pytesseract import pytesseract
 from finabox.interfaces import Bank, CreditCardBillReader
 from finabox.utils import (
     PathConstants,
-    convert_date_format,
     find_tesseract_path,
 )
 from finabox.utils.file import reader, writer
@@ -31,7 +30,7 @@ class PanCreditCardBillReader(CreditCardBillReader):
 
         return reader(PathConstants.OUTPUT_TXT)
 
-    def read_bill(self, **kwargs):
+    def read_bill(self):
         dict_fatura = []
         text = self._statement_text()
 
@@ -44,9 +43,7 @@ class PanCreditCardBillReader(CreditCardBillReader):
                 )
                 if statemented:
                     dict_fatura.append({
-                        'DATE': convert_date_format(
-                            statemented.group(1).strip(), '2023'
-                        ),
+                        'DATE': statemented.group(1).strip(),
                         'TRANSACTION': statemented.group(2).strip(),
                         'PRICE': sub(
                             r'RS|R$|RS |R$ ', '', statemented.group(3).strip()

@@ -12,6 +12,10 @@ def expected_date_format(date: str):
     return fullmatch(match_str, date)
 
 
+def expected_price_tobe_float(price):
+    return isinstance(price, float)
+
+
 @pytest.mark.parametrize(
     'bank',
     [
@@ -34,6 +38,7 @@ def test_read_statement(bank: Bank):
     # df.to_csv(f'{bank.__class__.__name__}-extrato.csv', index=False)
     assert df.empty == False
     assert expected_date_format(df['DATE'].loc[0])
+    assert expected_price_tobe_float(df['PRICE'].loc[0])
 
 
 @pytest.mark.parametrize(
@@ -68,3 +73,4 @@ def test_read_credit_card_bill(bank: Bank):
     # df.to_csv(f'{bank.__class__.__name__}-cartao.csv', index=False)
     assert df.empty == False
     assert expected_date_format(df['DATE'].loc[0])
+    assert expected_price_tobe_float(df['PRICE'].loc[0])
