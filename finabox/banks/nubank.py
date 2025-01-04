@@ -3,15 +3,19 @@ from json import loads
 from pandas import DataFrame, read_csv
 
 from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
+from finabox.utils import convert_date_format
 
 
 class NubankCreditCardBillReader(CreditCardBillReader):
-    def read_bill(self):
+    def read_bill(self, **kwargs):
         header = ['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
         pages = f'4-{self.pdf.total_pages}'
         bill = self.pdf.to_dataframe(pages, header)
         bill.drop(columns=['Unnamed'], inplace=True)
         bill.dropna(axis=0, inplace=True)
+        bill['DATE'] = bill['DATE'].apply(
+            convert_date_format, year=kwargs['year']
+        )
         bill['BANK'] = 'Nubank'
         bill['PAYMENT_TYPE'] = 'Credit'
 

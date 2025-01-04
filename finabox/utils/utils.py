@@ -27,7 +27,7 @@ def convert_date_format(data_str: str, year: str = None) -> str:
 
     data_str += f' {year}' if year and (year not in data_str) else ''
 
-    return data_str.replace(' ', '/')
+    return data_str.strip().replace(' ', '/')
 
 
 def to_float(num: str) -> float:

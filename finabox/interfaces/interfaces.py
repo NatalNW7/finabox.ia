@@ -17,7 +17,7 @@ class CreditCardBillReader(ABC):
         self.pdf = Pdf(join(PathConstants.TEMP, file))
 
     @abstractmethod
-    def read_bill(self) -> DataFrame: ...
+    def read_bill(self, **kwargs) -> DataFrame: ...
 
 
 class StatementReader(ABC):
@@ -50,9 +50,9 @@ class Bank(ABC):
     def set_csv(self, csv_file: str):
         self._csv_file = csv_file
 
-    def read_credit_card_bill(self) -> DataFrame:
+    def read_credit_card_bill(self, year: str = None) -> DataFrame:
         self._bill_reader.load_pdf(self._pdf_file)
-        bill = self._bill_reader.read_bill()
+        bill = self._bill_reader.read_bill(year=year)
 
         return bill
 

@@ -15,7 +15,7 @@ class InterCreditCardBillReader(CreditCardBillReader):
 
         return lines
 
-    def read_bill(self):
+    def read_bill(self, **kwargs):
         dict_fatura = []
         text = self._extract_text()
 
