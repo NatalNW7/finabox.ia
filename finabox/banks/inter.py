@@ -27,11 +27,11 @@ class InterCreditCardBillReader(CreditCardBillReader):
             )
             if statemented:
                 dict_fatura.append({
-                    'DATE': statemented.group(1).strip(),
-                    'DESCRIPTION': statemented.group(2).strip(),
-                    'PRICE': statemented.group(3).strip(),
-                    'BANK': 'Inter',
-                    'PAYMENT_TYPE': 'Credit',
+                    'date': statemented.group(1).strip(),
+                    'description': statemented.group(2).strip(),
+                    'price': statemented.group(3).strip(),
+                    'bank': 'Inter',
+                    'payment_type': 'Credit',
                 })
 
         return DataFrame(dict_fatura)
@@ -56,9 +56,9 @@ class InterStatementReader(StatementReader):
         )
 
     def read_statement(self) -> DataFrame:
-        self._change_columns(['DATE', 'DESCRIPTION', 'NAME', 'PRICE', 'SALDO'])
-        self._statement_df.drop(columns=['SALDO'], inplace=True)
-        self._statement_df['BANK'] = 'Inter'
+        self._change_columns(['date', 'description', 'name', 'price', 'saldo'])
+        self._statement_df.drop(columns=['saldo'], inplace=True)
+        self._statement_df['bank'] = 'Inter'
 
         return self._statement_df
 

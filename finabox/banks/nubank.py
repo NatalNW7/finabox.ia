@@ -1,5 +1,3 @@
-from json import loads
-
 from pandas import DataFrame, read_csv
 
 from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
@@ -7,13 +5,13 @@ from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
 
 class NubankCreditCardBillReader(CreditCardBillReader):
     def read_bill(self):
-        header = ['DATE', 'Unnamed', 'DESCRIPTION', 'PRICE']
+        header = ['date', 'Unnamed', 'description', 'price']
         pages = f'4-{self.pdf.total_pages}'
         bill = self.pdf.to_dataframe(pages, header)
         bill.drop(columns=['Unnamed'], inplace=True)
         bill.dropna(axis=0, inplace=True)
-        bill['BANK'] = 'Nubank'
-        bill['PAYMENT_TYPE'] = 'Credit'
+        bill['bank'] = 'Nubank'
+        bill['payment_type'] = 'Credit'
 
         return bill
 
@@ -23,7 +21,7 @@ class NubankStatementReader(StatementReader):
         return read_csv(file_path)
 
     def read_statement(self):
-        self._change_columns(['DATE', 'PRICE', 'UUID', 'DESCRIPTION'])
+        self._change_columns(['date', 'price', 'uuid', 'description'])
         self.__serialize_dataframe()
 
         return self._statement_df
@@ -31,28 +29,28 @@ class NubankStatementReader(StatementReader):
     def __read_description(self, description: str) -> dict:
         description = description.strip().split('-')
         return {
-            'NAME': description[1].strip(),
-            'DESCRIPTION': description[0].strip(),
+            'name': description[1].strip(),
+            'description': description[0].strip(),
         }
 
     def __serialize_dataframe(self):
         statement_lines = []
-        statement_json = loads(self._statement_df.to_json(orient='records'))
+        statement_json = self._statement_df.to_dict(orient='records')
 
         for data in statement_json:
             line = {
-                'PRICE': 0,
-                'DATE': '',
-                'BANK': 'Nubank',
+                'price': 0,
+                'date': '',
+                'bank': 'Nubank',
             }
 
-            if 'Pagamento de fatura' in data['DESCRIPTION']:
+            if 'Pagamento de fatura' in data['description']:
                 continue
 
-            line['PRICE'] = data['PRICE']
-            line['DATE'] = data['DATE']
+            line['price'] = data['price']
+            line['date'] = data['date']
 
-            line.update(self.__read_description(data['DESCRIPTION']))
+            line.update(self.__read_description(data['description']))
 
             statement_lines.append(line)
 

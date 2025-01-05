@@ -43,13 +43,13 @@ class PanCreditCardBillReader(CreditCardBillReader):
                 )
                 if statemented:
                     dict_fatura.append({
-                        'DATE': statemented.group(1).strip(),
-                        'DESCRIPTION': statemented.group(2).strip(),
-                        'PRICE': sub(
+                        'date': statemented.group(1).strip(),
+                        'description': statemented.group(2).strip(),
+                        'price': sub(
                             r'RS|R$|RS |R$ ', '', statemented.group(3).strip()
                         ),
-                        'BANK': 'Pan',
-                        'PAYMENT_TYPE': 'Credit',
+                        'bank': 'Pan',
+                        'payment_type': 'Credit',
                     })
 
         return DataFrame(dict_fatura)

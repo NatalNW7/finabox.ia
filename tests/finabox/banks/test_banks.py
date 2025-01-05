@@ -37,8 +37,8 @@ def test_read_statement(bank: Bank):
     df = bank.read_bank_statement()
     # df.to_csv(f'{bank.__class__.__name__}-extrato.csv', index=False)
     assert df.empty == False
-    assert expected_date_format(df['DATE'].loc[0])
-    assert expected_price_tobe_float(df['PRICE'].loc[0])
+    assert expected_date_format(df['date'].loc[0])
+    assert expected_price_tobe_float(df['price'].loc[0])
 
 
 @pytest.mark.parametrize(
@@ -72,8 +72,8 @@ def test_read_credit_card_bill(bank: Bank):
     df = bank.read_credit_card_bill(year='2023')
     # df.to_csv(f'{bank.__class__.__name__}-cartao.csv', index=False)
     assert df.empty == False
-    assert expected_date_format(df['DATE'].loc[0])
-    assert expected_price_tobe_float(df['PRICE'].loc[0])
+    assert expected_date_format(df['date'].loc[0])
+    assert expected_price_tobe_float(df['price'].loc[0])
 
 
 @pytest.mark.parametrize(
