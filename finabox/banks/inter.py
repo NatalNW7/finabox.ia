@@ -28,7 +28,7 @@ class InterCreditCardBillReader(CreditCardBillReader):
             if statemented:
                 dict_fatura.append({
                     'DATE': statemented.group(1).strip(),
-                    'TRANSACTION': statemented.group(2).strip(),
+                    'DESCRIPTION': statemented.group(2).strip(),
                     'PRICE': statemented.group(3).strip(),
                     'BANK': 'Inter',
                     'PAYMENT_TYPE': 'Credit',

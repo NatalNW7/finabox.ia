@@ -9,7 +9,7 @@ class MeliuzCreditCardBillReader(CreditCardBillReader):
         df = df.rename(
             columns={
                 'Unnamed: 0': 'DATE',
-                'Unnamed: 1': 'TRANSACTION',
+                'Unnamed: 1': 'DESCRIPTION',
                 'Unnamed: 2': 'PRICE',
             }
         )

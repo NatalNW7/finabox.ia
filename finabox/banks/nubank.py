@@ -7,7 +7,7 @@ from finabox.interfaces import Bank, CreditCardBillReader, StatementReader
 
 class NubankCreditCardBillReader(CreditCardBillReader):
     def read_bill(self):
-        header = ['DATE', 'Unnamed', 'TRANSACTION', 'PRICE']
+        header = ['DATE', 'Unnamed', 'DESCRIPTION', 'PRICE']
         pages = f'4-{self.pdf.total_pages}'
         bill = self.pdf.to_dataframe(pages, header)
         bill.drop(columns=['Unnamed'], inplace=True)

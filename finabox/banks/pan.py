@@ -44,7 +44,7 @@ class PanCreditCardBillReader(CreditCardBillReader):
                 if statemented:
                     dict_fatura.append({
                         'DATE': statemented.group(1).strip(),
-                        'TRANSACTION': statemented.group(2).strip(),
+                        'DESCRIPTION': statemented.group(2).strip(),
                         'PRICE': sub(
                             r'RS|R$|RS |R$ ', '', statemented.group(3).strip()
                         ),
