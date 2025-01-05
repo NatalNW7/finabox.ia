@@ -74,3 +74,22 @@ def test_read_credit_card_bill(bank: Bank):
     assert df.empty == False
     assert expected_date_format(df['DATE'].loc[0])
     assert expected_price_tobe_float(df['PRICE'].loc[0])
+
+
+@pytest.mark.parametrize(
+    'bank',
+    [
+        (
+            'inter',
+            join(pc.TEMP, 'extrato-inter.csv'),
+            join(pc.TEMP, 'cartao-inter.pdf'),
+        ),
+    ],
+    ids=lambda param: param[0],
+    indirect=True,
+)
+def test_set_pdf_should_return_error(bank: Bank):
+    with pytest.raises(Exception) as ex:
+        bank.read_credit_card_bill(year='2023')
+
+    assert 'This file is not a pdf' in str(ex.value)
