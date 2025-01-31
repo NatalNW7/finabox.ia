@@ -1,1 +1,1 @@
-from finabox.classifier.classifier import ClassifierAI as ClassifierAI
+from finabox.classifier.classifier import Classifier as Classifier
